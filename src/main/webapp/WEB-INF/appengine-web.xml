@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<appengine-web-app xmlns="http://appengine.google.com/ns/1.0">
+    <application>arnaudtest123</application>
+    <version>0-0-0-9</version>
+    <!-- Configure java.util.logging -->
+    <system-properties>
+        <!-- JDBC CONFIUGURATION -->
+        <property name="jdbc.driverClassName" value="org.hsqldb.jdbcDriver"/>
+        <property name="jdbc.url" value="hsqldb:mem:."/>
+        <property name="jdbc.username" value="sa"/>
+        <property name="jdbc.password" value=""/>
+        <property name="hibernate.dialect" value="org.hibernate.dialect.HSQLDialect"/>
+        <!-- LOGGER CONFIGURATION -->
+        <property name="log4j.appender.Stdout" value="org.apache.log4j.ConsoleAppender"/>
+        <property name="log4j.appender.Stdout.layout" value="org.apache.log4j.PatternLayout"/>
+        <property name="log4j.appender.Stdout.layout.conversionPattern" value="%-5p - %-26.26c{1} - %m\n"/>
+        <property name="log4j.rootLogger" value="DEBUG,Stdout"/>
+    </system-properties>
+    <sessions-enabled>true</sessions-enabled>
+</appengine-web-app>
