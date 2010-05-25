@@ -22,8 +22,7 @@
     <bean id="propertyPlaceholderConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="properties">
             <props>
-                <prop key="application.database.type">hsql</prop>
-                <prop key="application.database.showSql">false</prop>
+                <prop key="application.default.property.key">propertyDefalutValue</prop>
             </props>
         </property>
         <property name="systemPropertiesModeName">
