@@ -1,15 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <appengine-web-app xmlns="http://appengine.google.com/ns/1.0">
     <application>arnaudtest123</application>
-    <version>0-0-0-9</version>
+    <version>0-0-0-15</version>
     <!-- Configure java.util.logging -->
+    <!-- System Properties seems to be ignored / orveriden when using spring -->
     <system-properties>
         <!-- JDBC CONFIUGURATION -->
+        <!-- HSQL -->
         <property name="jdbc.driverClassName" value="org.hsqldb.jdbcDriver"/>
         <property name="jdbc.url" value="hsqldb:mem:."/>
         <property name="jdbc.username" value="sa"/>
         <property name="jdbc.password" value=""/>
         <property name="hibernate.dialect" value="org.hibernate.dialect.HSQLDialect"/>
+        <!-- MySQL      
+        <property name="jdbc.driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="jdbc.url" value="jdbc:mysql://localhost/testWebApp"/>
+        <property name="jdbc.username" value="root"/>
+        <property name="jdbc.password" value=""/>
+        <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
+        -->
         <!-- LOGGER CONFIGURATION -->
         <property name="log4j.appender.Stdout" value="org.apache.log4j.ConsoleAppender"/>
         <property name="log4j.appender.Stdout.layout" value="org.apache.log4j.PatternLayout"/>
