@@ -9,6 +9,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import test.dao.GenericDao;
+import test.wicket.component.TestComponent;
 
 /**
  * Homepage
@@ -36,6 +37,7 @@ public class Index extends WebPage {
         // Add the simplest type of label
         String tmpText = "Wicket Hello World :";
         add(new Label("message", tmpText + tmpTestEntity.getId()));
+        add(new TestComponent("hop"));
 
     }
 }
