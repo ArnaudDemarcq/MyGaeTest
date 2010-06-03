@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import test.dao.GenericDao;
 import test.wicket.component.TestComponent;
+import test.wicket.component.raphael.RaphaelComponent;
 
 /**
  * Homepage
