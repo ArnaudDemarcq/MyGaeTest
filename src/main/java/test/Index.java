@@ -56,7 +56,8 @@ public class Index extends WebPage {
         // Add the simplest type of label
         String tmpText = "Wicket Hello World :";
         add(new Label("message", tmpText + tmpTestEntity.getId()));
-        add(new TestComponent("hop"));
+
+        //add(new TestComponent("hop"));
 
         /*
         DefaultPieDataset j = new DefaultPieDataset();
@@ -96,7 +97,7 @@ public class Index extends WebPage {
 
 
         };/**/
-        Panel myPanel = new TestPieChart("jfreechart", 1000, 1000);
+        Panel myPanel = new TestPieChart("jfreechart");
         add(myPanel);
 
     }
