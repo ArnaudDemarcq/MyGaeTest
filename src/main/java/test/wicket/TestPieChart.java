@@ -22,9 +22,9 @@ public class TestPieChart extends JfcPieChart {
     @Override
     public Map<String, Number> getData() {
         Map<String, Number> testMap = new HashMap<String, Number>();
-        testMap.put("Key1", 12);
-        testMap.put("Key2", 3);
-        testMap.put("Key3", 24);
+        testMap.put("Key1", getRandom(1, 15));
+        testMap.put("Key2", getRandom(1, 15));
+        testMap.put("Key3", getRandom(1, 15));
         return testMap;
     }
 
@@ -33,13 +33,13 @@ public class TestPieChart extends JfcPieChart {
         return "This is a test Pie Chart";
     }
 
-    @Override
-    public int getWidth() {
-        return 250;
+    private int getRandom(int lower, int higher) {
+        int random = (int) (Math.random() * (higher - lower)) + lower;
+        return random;
     }
 
     @Override
-    public int getHeight() {
-        return 250;
+    public boolean getLegend() {
+        return true;
     }
 }

@@ -30,7 +30,7 @@ public abstract class JfcPieChart extends JfcPanel implements PieChart {
             dataSet.setValue(key, dataMap.get(key));
         }
 
-        JFreeChart jfc = ChartFactory.createPieChart(getTitle(), dataSet, true, true, false);
+        JFreeChart jfc = ChartFactory.createPieChart(getTitle(), dataSet, getLegend(), true, false);
         PiePlot pp = (PiePlot) jfc.getPlot();
         pp.setSectionOutlinesVisible(false);
         pp.setLabelFont(getFont());
@@ -39,12 +39,31 @@ public abstract class JfcPieChart extends JfcPanel implements PieChart {
         return jfc;
     }
 
+    // Default Title
     @Override
     public String getTitle() {
         return "";
     }
 
+    // default font
     public Font getFont() {
         return new Font("SansSerif", Font.PLAIN, 12);
+    }
+
+    // default Legend
+    public boolean getLegend() {
+        return true;
+    }
+
+    //default Width
+    @Override
+    public int getWidth() {
+        return 250;
+    }
+
+    //default Heigth
+    @Override
+    public int getHeight() {
+        return 250;
     }
 }

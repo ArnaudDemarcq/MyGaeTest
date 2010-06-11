@@ -26,6 +26,7 @@ import org.krohm.wicket.component.charts.jfreechart.JfcPieChart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import test.dao.GenericDao;
+import test.wicket.TestHistogramChart;
 import test.wicket.TestPieChart;
 import test.wicket.component.TestComponent;
 import test.wicket.component.jfreechart.MappedChart;
@@ -57,48 +58,14 @@ public class Index extends WebPage {
         String tmpText = "Wicket Hello World :";
         add(new Label("message", tmpText + tmpTestEntity.getId()));
 
-        //add(new TestComponent("hop"));
 
-        /*
-        DefaultPieDataset j = new DefaultPieDataset();
-        j.setValue("UNO", new Double(20.0));
-        j.setValue("DUE", new Double(10.0));
-        j.setValue("TRE", new Double(20.0));
-        j.setValue("QUATTRO", new Double(30.0));
-        j.setValue("CINQUE", new Double(20.0));
+        //Panel myPanel = new TestPieChart("jfreechart");
+        Panel myPanelHisto = new TestHistogramChart("Histo");
+        add(myPanelHisto);
 
-        JFreeChart jfc = ChartFactory.createPieChart("testChart", j, true, true, false);
-        PiePlot pp = (PiePlot) jfc.getPlot();
-        pp.setSectionOutlinesVisible(false);
-        pp.setLabelFont(new Font("SansSerif", Font.PLAIN, 12));
-        pp.setNoDataMessage("Nessun Dato Inserito");
-        pp.setCircular(false);
-        pp.setLabelGap(0.02);
-
-        MappedChart myChart = new MappedChart("jfreechart", jfc, 100  , 100){
-
-        @Override
-        protected void onClickCallback(AjaxRequestTarget target, ChartEntity entity) {
-        logger.debug("bla");
-        }
-        };
-
-        Image myImage = new ChartImage( "jfreechart", jfc, 1000  , 1000);
-        add (myImage);/**/
-
-        /*
-        Panel myPanel = new JfcPieChart("jfreechart", 1000, 1000) {
-
-        @Override
-        public Map<String, Number> getData() {
-        logger.debug("test");
-        return null;
-        }
-
-
-        };/**/
-        Panel myPanel = new TestPieChart("jfreechart");
-        add(myPanel);
+        //Panel myPanel = new TestPieChart("jfreechart");
+        Panel myPanelPie = new TestPieChart("Pie");
+        add(myPanelPie);
 
     }
 }
