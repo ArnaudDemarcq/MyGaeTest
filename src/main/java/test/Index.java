@@ -1,38 +1,22 @@
 package test;
 
 import beans.TestEntity;
-import java.awt.Font;
-import java.awt.Graphics2D;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
+import java.awt.Color;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.wicket.PageParameters;
-import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.markup.html.image.Image;
-import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.entity.ChartEntity;
-import org.jfree.chart.plot.PiePlot;
-import org.jfree.chart.plot.Plot;
-import org.jfree.chart.plot.PlotRenderingInfo;
-import org.jfree.chart.plot.PlotState;
-import org.jfree.data.general.DefaultPieDataset;
+import org.krohm.wicket.component.charts.jfreechart.JfcHistogramChart;
 import org.krohm.wicket.component.charts.jfreechart.JfcPieChart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import test.dao.GenericDao;
-import test.wicket.TestHistogramChart;
-import test.wicket.TestPieChart;
-import test.wicket.component.TestComponent;
-import test.wicket.component.jfreechart.MappedChart;
-import test.wicket.component.jfreechart.util.ChartImage;
-import test.wicket.component.raphael.RaphaelComponent;
 
 /**
  * Homepage
@@ -60,27 +44,66 @@ public class Index extends WebPage {
         add(new Label("message", tmpText + tmpTestEntity.getId()));
 
 
-        /*
-        //Panel myPanel = new TestPieChart("jfreechart");
-        Panel myPanelHisto = new TestHistogramChart("Histo");
-        add(myPanelHisto);
+        // A Random Inner Pie
+        JfcPieChart innerPieChart = new JfcPieChart("Inner") {
 
-        //Panel myPanel = new TestPieChart("jfreechart");
-        Panel myPanelPie = new TestPieChart("Pie");
-        add(myPanelPie); /**/
-
-        add(new TestPieChart("Pie"));
-        add(new TestHistogramChart("Histo"));
-        add(new JfcPieChart("Inner") {
-
+            @Override
             public Map<String, Number> getData() {
-
-                Map<String, Number> test = new HashMap<String, Number>();
-                test.put("hop", 12);
-                test.put("hip", 4);
-                return test;
+                return getPie1Data();
             }
-        });
+        };
+        innerPieChart.setWidth(500);
+        innerPieChart.setTitle("This is a Chart Defined as an Inner Class");
+        add(innerPieChart);
 
+
+        // And a Random Inner Histogram
+        JfcHistogramChart innerHistogramChart = new JfcHistogramChart("InnerHisto") {
+
+            @Override
+            public Map<String, Map<String, Number>> getData() {
+                return getHisto1Data();
+            }
+        };
+        innerHistogramChart.setWidth(1000);
+        innerHistogramChart.setTitle("This is a Chart Defined as an Inner Class");
+        innerHistogramChart.setColorList(getColors());
+        innerHistogramChart.setTransparency(0.6F);
+        add(innerHistogramChart);
+    }
+
+    // Random Methods
+    private int getRandom(int lower, int higher) {
+        int random = (int) (Math.random() * (higher - lower)) + lower;
+        return random;
+    }
+
+    private Map<String, Map<String, Number>> getHisto1Data() {
+        Map<String, Map<String, Number>> returnMap = new LinkedHashMap<String, Map<String, Number>>();
+        for (int i = 0; i < 4; i++) {
+            Map<String, Number> currentMap = new LinkedHashMap<String, Number>();
+            returnMap.put("Category " + (i + 1), currentMap);
+            for (int j = 0; j < 10; j++) {
+                currentMap.put("Data " + (j + 1), getRandom(2, 14));
+            }
+        }
+        return returnMap;
+    }
+
+    private Map<String, Number> getPie1Data() {
+        Map<String, Number> testMap = new HashMap<String, Number>();
+        for (int i = 0; i < 3; i++) {
+            testMap.put("Key " + (i + 1), getRandom(10, 25));
+        }
+        return testMap;
+    }
+
+    private List<Color> getColors() {
+        List<Color> colorList = new ArrayList<Color>();
+        colorList.add(Color.BLUE);
+        colorList.add(Color.WHITE);
+        colorList.add(Color.BLACK);
+        colorList.add(Color.PINK);
+        return colorList;
     }
 }
