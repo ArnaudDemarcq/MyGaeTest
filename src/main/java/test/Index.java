@@ -54,6 +54,10 @@ public class Index extends WebPage {
         };
         innerPieChart.setWidth(500);
         innerPieChart.setTitle("This is a Chart Defined as an Inner Class");
+        innerPieChart.setTransparency(0.6F);
+        
+        
+
         add(innerPieChart);
 
 
@@ -67,8 +71,8 @@ public class Index extends WebPage {
         };
         innerHistogramChart.setWidth(1000);
         innerHistogramChart.setTitle("This is a Chart Defined as an Inner Class");
-        innerHistogramChart.setColorList(getColors());
-        innerHistogramChart.setTransparency(0.6F);
+        //innerHistogramChart.setColorList(getColors());
+        //innerHistogramChart.setTransparency(0.6F);
         add(innerHistogramChart);
     }
 
@@ -100,10 +104,10 @@ public class Index extends WebPage {
 
     private List<Color> getColors() {
         List<Color> colorList = new ArrayList<Color>();
-        colorList.add(Color.BLUE);
-        colorList.add(Color.WHITE);
         colorList.add(Color.BLACK);
-        colorList.add(Color.PINK);
+        colorList.add(Color.DARK_GRAY);
+        colorList.add(Color.LIGHT_GRAY);
+        colorList.add(Color.WHITE);
         return colorList;
     }
 }
