@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.wicket.PageParameters;
@@ -59,13 +60,27 @@ public class Index extends WebPage {
         add(new Label("message", tmpText + tmpTestEntity.getId()));
 
 
+        /*
         //Panel myPanel = new TestPieChart("jfreechart");
         Panel myPanelHisto = new TestHistogramChart("Histo");
         add(myPanelHisto);
 
         //Panel myPanel = new TestPieChart("jfreechart");
         Panel myPanelPie = new TestPieChart("Pie");
-        add(myPanelPie);
+        add(myPanelPie); /**/
+
+        add(new TestPieChart("Pie"));
+        add(new TestHistogramChart("Histo"));
+        add(new JfcPieChart("Inner") {
+
+            public Map<String, Number> getData() {
+
+                Map<String, Number> test = new HashMap<String, Number>();
+                test.put("hop", 12);
+                test.put("hip", 4);
+                return test;
+            }
+        });
 
     }
 }

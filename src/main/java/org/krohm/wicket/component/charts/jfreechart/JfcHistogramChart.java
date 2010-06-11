@@ -1,29 +1,20 @@
 package org.krohm.wicket.component.charts.jfreechart;
 
-import java.awt.Font;
-import java.util.List;
 import java.util.Map;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.axis.AxisSpace;
-import org.jfree.chart.plot.PiePlot;
+import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.chart.plot.XYPlot;
 import org.jfree.data.category.DefaultCategoryDataset;
-import org.jfree.data.general.DefaultPieDataset;
-import org.jfree.data.statistics.HistogramDataset;
-import org.jfree.data.statistics.HistogramType;
-import org.jfree.ui.RectangleInsets;
-import org.krohm.wicket.component.charts.HistogramChart;
-import org.krohm.wicket.component.charts.PieChart;
-import org.krohm.wicket.component.charts.jfreechart.parent.JfcPanel;
+import org.krohm.wicket.component.charts.definition.HistogramChart;
+import org.krohm.wicket.component.charts.jfreechart.util.AbstractChartImage;
 
 /**
  *
  * @author arnaud
  */
 //implements PieChart
-public abstract class JfcHistogramChart extends JfcPanel implements HistogramChart {
+public abstract class JfcHistogramChart extends AbstractChartImage implements HistogramChart {
 
     public JfcHistogramChart(String id) {
         super(id);
@@ -47,6 +38,10 @@ public abstract class JfcHistogramChart extends JfcPanel implements HistogramCha
                 histoDataSet,
                 getOrientation(), getLegend(),
                 true, true);
+
+        CategoryPlot pp = (CategoryPlot) chart.getPlot();
+
+
         return chart;
     }
 

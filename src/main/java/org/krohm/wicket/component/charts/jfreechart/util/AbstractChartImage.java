@@ -1,3 +1,7 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package org.krohm.wicket.component.charts.jfreechart.util;
 
 import java.awt.image.BufferedImage;
@@ -8,26 +12,25 @@ import org.apache.wicket.protocol.http.WebResponse;
 import org.jfree.chart.ChartRenderingInfo;
 import org.jfree.chart.JFreeChart;
 
-public class ChartImage extends Image {
+/**
+ *
+ * @author arnaud
+ */
+public abstract class AbstractChartImage extends Image implements AbstractJfcChart {
 
     private static final long serialVersionUID = -7165602010769784429L;
-    private int width;
-    private int height;
-    private JFreeChart chart;
     private transient BufferedImage image;
     private transient ChartRenderingInfo renderingInfo;
 
-    public ChartImage(String id, JFreeChart chart, int width, int height) {
+    public AbstractChartImage(String id) {
         super(id);
-        this.width = width;
-        this.height = height;
-        this.chart = chart;
     }
 
     private BufferedImage createBufferedImage() {
         if (image == null) {
             renderingInfo = new ChartRenderingInfo();
-            image = chart.createBufferedImage(width, height, renderingInfo);
+            JFreeChart chart=getJFreeChart();
+            image = chart.createBufferedImage(getWidth(), getHeight(), renderingInfo);
         }
         return image;
     }
@@ -62,5 +65,5 @@ public class ChartImage extends Image {
             }
         };
     }
-}
 
+}

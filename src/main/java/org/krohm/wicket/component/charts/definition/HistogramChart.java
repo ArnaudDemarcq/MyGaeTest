@@ -2,19 +2,20 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.krohm.wicket.component.charts;
+package org.krohm.wicket.component.charts.definition;
 
-import java.awt.Font;
 import java.util.Map;
 
 /**
  *
  * @author arnaud
  */
-public interface PieChart {
+public interface HistogramChart {
 
-    public Map<String, Number> getData();
+    public Map<String, Map<String, Number>> getData();
 
     public String getTitle();
+
+    
 
 }

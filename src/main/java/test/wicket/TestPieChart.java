@@ -4,7 +4,6 @@
  */
 package test.wicket;
 
-import java.lang.Number;
 import java.util.HashMap;
 import java.util.Map;
 import org.krohm.wicket.component.charts.jfreechart.JfcPieChart;
@@ -14,6 +13,8 @@ import org.krohm.wicket.component.charts.jfreechart.JfcPieChart;
  * @author arnaud
  */
 public class TestPieChart extends JfcPieChart {
+
+
 
     public TestPieChart(String id) {
         super(id);

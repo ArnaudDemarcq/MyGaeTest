@@ -6,15 +6,21 @@ import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PiePlot;
 import org.jfree.data.general.DefaultPieDataset;
-import org.krohm.wicket.component.charts.PieChart;
-import org.krohm.wicket.component.charts.jfreechart.parent.JfcPanel;
+import org.krohm.wicket.component.charts.definition.PieChart;
+import org.krohm.wicket.component.charts.jfreechart.util.AbstractChartImage;
 
 /**
  *
  * @author arnaud
  */
 //implements PieChart
-public abstract class JfcPieChart extends JfcPanel implements PieChart {
+public abstract class JfcPieChart extends AbstractChartImage implements PieChart {
+
+    protected int DEFAULT_HEIGHT = 250;
+    protected int DEFAULT_WIDTH = 250;
+    protected boolean DEFAULT_LEGEND = true;
+    protected Font DEFAULT_FONT = new Font("SansSerif", Font.PLAIN, 12);
+    protected String DEFAULT_TITLE = "";
 
     public JfcPieChart(String id) {
         super(id);
@@ -39,31 +45,26 @@ public abstract class JfcPieChart extends JfcPanel implements PieChart {
         return jfc;
     }
 
-    // Default Title
     @Override
     public String getTitle() {
-        return "";
+        return DEFAULT_TITLE;
     }
 
-    // default font
     public Font getFont() {
-        return new Font("SansSerif", Font.PLAIN, 12);
+        return DEFAULT_FONT;
     }
 
-    // default Legend
     public boolean getLegend() {
-        return true;
+        return DEFAULT_LEGEND;
     }
 
-    //default Width
     @Override
     public int getWidth() {
-        return 250;
+        return DEFAULT_HEIGHT;
     }
 
-    //default Heigth
     @Override
     public int getHeight() {
-        return 250;
+        return DEFAULT_WIDTH;
     }
 }

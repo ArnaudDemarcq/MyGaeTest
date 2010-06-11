@@ -21,7 +21,7 @@ public class TestHistogramChart extends JfcHistogramChart {
 
     public Map<String, Map<String, Number>> getData() {
         Map<String, Map<String, Number>> returnMap = new LinkedHashMap<String, Map<String, Number>>();
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 4; i++) {
             Map<String, Number> currentMap = new LinkedHashMap<String, Number>();
             returnMap.put("Category " + (i + 1), currentMap);
             for (int j = 0; j < 10; j++) {
