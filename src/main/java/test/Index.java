@@ -12,6 +12,7 @@ import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.krohm.wicket.component.charts.jfreechart.JfcGraphChart;
 import org.krohm.wicket.component.charts.jfreechart.JfcHistogramChart;
 import org.krohm.wicket.component.charts.jfreechart.JfcPieChart;
 import org.slf4j.Logger;
@@ -55,8 +56,8 @@ public class Index extends WebPage {
         innerPieChart.setWidth(500);
         innerPieChart.setTitle("This is a Chart Defined as an Inner Class");
         innerPieChart.setTransparency(0.6F);
-        
-        
+
+
 
         add(innerPieChart);
 
@@ -74,6 +75,15 @@ public class Index extends WebPage {
         //innerHistogramChart.setColorList(getColors());
         //innerHistogramChart.setTransparency(0.6F);
         add(innerHistogramChart);
+
+        JfcGraphChart testGraph = new JfcGraphChart("InnerGraph") {
+
+            @Override
+            public Map<String, Map<Number, Number>> getData() {
+                return getGraphAllData();
+            }
+        };
+        add(testGraph);
     }
 
     // Random Methods
@@ -100,6 +110,25 @@ public class Index extends WebPage {
             testMap.put("Key " + (i + 1), getRandom(10, 25));
         }
         return testMap;
+    }
+
+    private Map<Number, Number> getGraph1Data() {
+        Map<Number, Number> testMap = new HashMap<Number, Number>();
+        Integer currentValue = 10;
+        for (int i = 0; i < 50; i++) {
+            currentValue += getRandom(-4, 5);
+            testMap.put(i, currentValue);
+        }
+        return testMap;
+    }
+
+    private Map<String, Map<Number, Number>> getGraphAllData() {
+        Map<String, Map<Number, Number>> returnMap = new HashMap<String, Map<Number, Number>>();
+        for (int i = 0; i < 3; i++) {
+            returnMap.put("Key " + (i + 1), getGraph1Data());
+        }
+        return returnMap;
+
     }
 
     private List<Color> getColors() {
