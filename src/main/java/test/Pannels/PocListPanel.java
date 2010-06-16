@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import test.Index;
 import test.pages.DaoTestPage;
 import test.pages.JfcTestPage;
+import test.pages.WicketTestPage;
 
 /**
  *
@@ -52,6 +53,7 @@ public class PocListPanel extends Panel {
         returnList.add(new ClassLinkLabel(Index.class, "HomeLink"));
         returnList.add(new ClassLinkLabel(JfcTestPage.class, "JfcLink"));
         returnList.add(new ClassLinkLabel(DaoTestPage.class, "DaoLink"));
+        returnList.add(new ClassLinkLabel(WicketTestPage.class, "WicketLink"));
         return returnList;
     }
 
