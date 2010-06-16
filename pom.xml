@@ -2,7 +2,7 @@
 <project>
     <modelVersion>4.0.0</modelVersion>
     <name>arnaudtest123</name>
-    <groupId>arnaud.test        </groupId>
+    <groupId>arnaud.test</groupId>
     <artifactId>arnaudtest123</artifactId>
     <packaging>war</packaging>
     <version>1.0.0-SNAPSHOT</version>
