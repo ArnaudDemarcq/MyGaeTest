@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.apache.wicket.PageParameters;
+import org.apache.wicket.markup.html.basic.Label;
 
 public class WicketTestPage extends PocMainPage {
 
@@ -33,6 +34,8 @@ public class WicketTestPage extends PocMainPage {
 
             @Override
             protected void onSubmit() {
+                logger.error("Value 1 : " + processName);
+                logger.error("Value 2 : " + taskName);
             }
         };
 
@@ -58,6 +61,8 @@ public class WicketTestPage extends PocMainPage {
         form.add(processNameDropDown);
         form.add(taskdiv);
         add(form);
+
+        add(new Label("result", taskName));
 
     }
 
