@@ -15,8 +15,10 @@ import org.apache.wicket.model.PropertyModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import test.Index;
+import test.pages.CalendarPage;
 import test.pages.DaoTestPage;
 import test.pages.JfcTestPage;
+import test.pages.RaphaelPage;
 import test.pages.WicketTestPage;
 
 /**
@@ -54,6 +56,8 @@ public class PocListPanel extends Panel {
         returnList.add(new ClassLinkLabel(JfcTestPage.class, "JfcLink"));
         returnList.add(new ClassLinkLabel(DaoTestPage.class, "DaoLink"));
         returnList.add(new ClassLinkLabel(WicketTestPage.class, "WicketLink"));
+        returnList.add(new ClassLinkLabel(CalendarPage.class, "CalendarLink"));
+        returnList.add(new ClassLinkLabel(RaphaelPage.class, "RaphaelLink"));
         return returnList;
     }
 
