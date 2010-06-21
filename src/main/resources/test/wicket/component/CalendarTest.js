@@ -5,7 +5,7 @@ window.onload = function () {
     var m = date.getMonth();
     var y = date.getFullYear();
 
-    $('#calendar').fullCalendar({
+    $("#${markupId}").fullCalendar({
 
         editable: true,
         header: {
