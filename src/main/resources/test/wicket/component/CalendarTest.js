@@ -13,7 +13,12 @@ window.onload = function () {
             center: 'title',
             right: 'month,agendaWeek,agendaDay'
         },
+        //   events: function(start, end, callback) {
+        //       $("#${markupId}").fireEvent("onclick", newEvt);
+        // Todo : Ajax call  to wicket
 
+
+        //  },
         events: [
         {
             title: 'All Day Event',
@@ -59,6 +64,30 @@ window.onload = function () {
             end: new Date(y, m, 29),
             url: 'http://google.com/'
         }
-        ]
+        ],
+
+        eventDrop: function(event,dayDelta,minuteDelta,allDay,revertFunc) {
+
+            var newEvt = document.createEventObject()
+            $("#${markupId}").fireEvent("eventDrop", newEvt);
+            /*
+            alert(
+                event.title + " was moved " +
+                dayDelta + " days and " +
+                minuteDelta + " minutes."
+                );
+
+            if (allDay) {
+                alert("Event is now all-day");
+            }else{
+                alert("Event has a time-of-day");
+            }
+
+            if (!confirm("Are you sure about this change?")) {
+                revertFunc();
+            }/**/
+
+        }
+
     });
 };

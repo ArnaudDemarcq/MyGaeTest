@@ -5,14 +5,15 @@
 package test.wicket.component;
 
 import java.util.Map;
-import org.apache.wicket.behavior.HeaderContributor;
+import org.apache.wicket.ajax.AjaxEventBehavior;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.markup.html.CSSPackageResource;
 import org.apache.wicket.markup.html.JavascriptPackageResource;
 import org.apache.wicket.markup.html.form.LabeledWebMarkupContainer;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.collections.MiniMap;
-import org.apache.wicket.util.template.PackagedTextTemplate;
 import org.apache.wicket.util.template.TextTemplateHeaderContributor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,6 +50,9 @@ public class CurrentTestComponent extends LabeledWebMarkupContainer {
         // Dynamic JavaScripts
         add(TextTemplateHeaderContributor.forJavaScript(CurrentTestComponent.class, TEST_JS_NAME, getTemplateKeys(this)));
         this.setOutputMarkupId(true);
+        for (IBehavior currentBehaviour : this.getBehaviors()) {
+            logger.error(currentBehaviour.getClass().toString());
+        }
     }
 
     // Values for Dynamic JavaScripts
