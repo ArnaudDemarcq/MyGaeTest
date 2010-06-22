@@ -4,6 +4,11 @@ window.onload = function () {
     var d = date.getDate();
     var m = date.getMonth();
     var y = date.getFullYear();
+    function callWicket() {
+
+        //  var wcall = wicketAjaxGet("?wicket:interface=:1:calendarOne::IActivePageBehaviorListener:6:&wicket:ignoreIfNotActive=true" + "&hop=&foo=bar" , function() { }, function() { });
+        var wcall = wicketAjaxGet("${eventBehaviourUrl}" + "&hop=&foo=bar" , function() { }, function() { });
+    }
 
     $("#${markupId}").fullCalendar({
 
@@ -68,25 +73,11 @@ window.onload = function () {
 
         eventDrop: function(event,dayDelta,minuteDelta,allDay,revertFunc) {
 
-            var newEvt = document.createEventObject()
-            $("#${markupId}").fireEvent("eventDrop", newEvt);
-            /*
-            alert(
-                event.title + " was moved " +
-                dayDelta + " days and " +
-                minuteDelta + " minutes."
-                );
+            var evenDropArgs = "&event=" + event + "&eventTitle=" + event.title +
+            "&dayDelta=" + dayDelta + "&minuteDelta=" + minuteDelta +
+            "&allDay=" + allDay + "&revertFunc=" + revertFunc ;
 
-            if (allDay) {
-                alert("Event is now all-day");
-            }else{
-                alert("Event has a time-of-day");
-            }
-
-            if (!confirm("Are you sure about this change?")) {
-                revertFunc();
-            }/**/
-
+            wicketAjaxGet("${eventBehaviourUrl}" + evenDropArgs , function() { }, function() { });
         }
 
     });

@@ -4,10 +4,14 @@
  */
 package test.pages;
 
+import java.util.Map;
 import org.apache.wicket.PageParameters;
+import org.apache.wicket.RequestCycle;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.behavior.IBehavior;
+import org.apache.wicket.protocol.http.WebRequestCycle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import test.Pannels.FullCalendarPanel;
@@ -24,26 +28,11 @@ public class CalendarPage extends PocMainPage {
     public CalendarPage(PageParameters parameters) {
         super(parameters);
 
-        CurrentTestComponent calendarOne = new CurrentTestComponent("calendarOne");
-        add(calendarOne);
-        AjaxEventBehavior testAjaxBehaviour1 = new AjaxEventBehavior("eventDrop") {
+        CurrentTestComponent calendarOne = new CurrentTestComponent(this,"calendarOne");
 
-            @Override
-            protected void onEvent(AjaxRequestTarget art) {
-                
-                logger.error("hopla !");
-                logger.error(art.toString());
-            }
-        };
-
-
-
-
-        calendarOne.add(testAjaxBehaviour1);
-        logger.error(testAjaxBehaviour1.getCallbackUrl(true).toString());
-
-
-
+        for (IBehavior currentBehaviour : calendarOne.getBehaviors()) {
+            logger.error(currentBehaviour.getClass().toString());
+        }
 
 
 

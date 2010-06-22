@@ -5,14 +5,16 @@
 package test.wicket.component;
 
 import java.util.Map;
+import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.RequestCycle;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.markup.html.CSSPackageResource;
 import org.apache.wicket.markup.html.JavascriptPackageResource;
 import org.apache.wicket.markup.html.form.LabeledWebMarkupContainer;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.protocol.http.WebRequestCycle;
 import org.apache.wicket.util.collections.MiniMap;
 import org.apache.wicket.util.template.TextTemplateHeaderContributor;
 import org.slf4j.Logger;
@@ -30,13 +32,15 @@ public class CurrentTestComponent extends LabeledWebMarkupContainer {
     // Dynamic JavaScripts
     private static final String TEST_JS_NAME = "CalendarTest.js";
 
-    public CurrentTestComponent(String id) {
+    public CurrentTestComponent(MarkupContainer parent, String id) {
         super(id);
+        parent.add(this);
         initJs();
     }
 
-    public CurrentTestComponent(String id, IModel<?> model) {
+    public CurrentTestComponent(MarkupContainer parent, String id, IModel<?> model) {
         super(id, model);
+        parent.add(this);
         initJs();
     }
 
@@ -48,28 +52,63 @@ public class CurrentTestComponent extends LabeledWebMarkupContainer {
         // Static CSSs
         add(CSSPackageResource.getHeaderContribution(CurrentTestComponent.class, FX_CSS_NAME));
         // Dynamic JavaScripts
-        add(TextTemplateHeaderContributor.forJavaScript(CurrentTestComponent.class, TEST_JS_NAME, getTemplateKeys(this)));
         this.setOutputMarkupId(true);
-        for (IBehavior currentBehaviour : this.getBehaviors()) {
-            logger.error(currentBehaviour.getClass().toString());
-        }
+
+        // Behaviours *** TEST ***
+        AjaxEventBehavior testAjaxBehaviour1 = new AjaxEventBehavior("eventDrop") {
+
+            @Override
+            protected void onEvent(AjaxRequestTarget art) {
+
+                logger.error("[***************************************]");
+                Map map = ((WebRequestCycle) RequestCycle.get()).getRequest().getParameterMap();
+                for (Object o : map.keySet()) {
+                    Object[] value = (Object[]) map.get(o);
+                    logger.error(o + " ====> " + value[0]);
+                }
+
+                Object[] eventObject = (Object[]) map.get("event");
+                logEvent(eventObject[0]);
+            }
+        };
+
+
+        add(testAjaxBehaviour1);
+        add(TextTemplateHeaderContributor.forJavaScript(CurrentTestComponent.class,
+                TEST_JS_NAME, getTemplateKeys(this, testAjaxBehaviour1)));
+
+        logger.error(testAjaxBehaviour1.getCallbackUrl().toString());
+
+
     }
 
     // Values for Dynamic JavaScripts
-    private IModel<Map<String, Object>> getTemplateKeys(final CurrentTestComponent currentCalendar) {
+    private IModel<Map<String, Object>> getTemplateKeys(
+            final CurrentTestComponent currentCalendar, final AjaxEventBehavior currentBehaviour) {
+
 
         IModel<Map<String, Object>> variablesModel = new AbstractReadOnlyModel<Map<String, Object>>() {
 
             private Map<String, Object> variables;
+            private static final int MAX_ENTRIES = 32;
 
             public Map<String, Object> getObject() {
                 if (variables == null) {
-                    this.variables = new MiniMap<String, Object>(3);
+                    this.variables = new MiniMap<String, Object>(MAX_ENTRIES);
                     variables.put("markupId", currentCalendar.getMarkupId());
+                    variables.put("eventBehaviourUrl", currentBehaviour.getCallbackUrl(true).toString());
                 }
                 return variables;
             }
         };
         return variablesModel;
+    }
+
+    private void logEvent(Object eventObject) {
+        if (eventObject == null) {
+            logger.error("Null Event");
+        }
+        logger.error(eventObject.toString());
+        logger.error(eventObject.getClass().toString());
     }
 }
