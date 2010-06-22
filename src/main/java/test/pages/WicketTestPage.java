@@ -29,6 +29,9 @@ public class WicketTestPage extends PocMainPage {
     public WicketTestPage(PageParameters parameters) {
         super(parameters);
 
+        for (String key : parameters.keySet()) {
+            logger.debug("param : key<" + key + "> value <" + parameters.get(key) + ">");
+        }
 
         final Form form = new Form("form") {
 

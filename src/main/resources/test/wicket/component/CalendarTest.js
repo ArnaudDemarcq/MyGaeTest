@@ -10,6 +10,20 @@ window.onload = function () {
         var wcall = wicketAjaxGet("${eventBehaviourUrl}" + "&hop=&foo=bar" , function() { }, function() { });
     }
 
+    function getEventArguments(event)
+    {
+        var currentEventString = "";
+        if (event.title != undefined)
+        {
+            currentEventString += "&eventTitle=" + event.title;
+        }
+        if (event.id != undefined)
+        {
+            currentEventString += "&eventId="+ event.id;
+        }
+        return currentEventString;
+    }
+
     $("#${markupId}").fullCalendar({
 
         editable: true,
@@ -73,7 +87,7 @@ window.onload = function () {
 
         eventDrop: function(event,dayDelta,minuteDelta,allDay,revertFunc) {
 
-            var evenDropArgs = "&event=" + event + "&eventTitle=" + event.title +
+            var evenDropArgs = getEventArguments(event) +
             "&dayDelta=" + dayDelta + "&minuteDelta=" + minuteDelta +
             "&allDay=" + allDay + "&revertFunc=" + revertFunc ;
 

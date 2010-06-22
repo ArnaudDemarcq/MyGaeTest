@@ -66,9 +66,6 @@ public class CurrentTestComponent extends LabeledWebMarkupContainer {
                     Object[] value = (Object[]) map.get(o);
                     logger.error(o + " ====> " + value[0]);
                 }
-
-                Object[] eventObject = (Object[]) map.get("event");
-                logEvent(eventObject[0]);
             }
         };
 
