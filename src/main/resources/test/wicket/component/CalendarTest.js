@@ -21,6 +21,10 @@ window.onload = function () {
         {
             currentEventString += "&eventId="+ event.id;
         }
+        if (event.start != undefined)
+        {
+            currentEventString += "&eventStart="+ event.start;
+        }
         return currentEventString;
     }
 
