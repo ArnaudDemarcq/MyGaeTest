@@ -10,6 +10,12 @@ window.onload = function () {
         var wcall = wicketAjaxGet("${eventBehaviourUrl}" + "&hop=&foo=bar" , function() { }, function() { });
     }
 
+    function callWicketEvent(wicketUrl, wicketArgs, wicketEventType)
+    {
+        var finalUrl = wicketUrl + wicketArgs + "&EVENT_TYPE=" +wicketEventType;
+        wicketAjaxGet(finalUrl , function() { }, function() { });
+    }
+
     function getEventArguments(event)
     {
         var currentEventString = "";
@@ -95,7 +101,8 @@ window.onload = function () {
             "&dayDelta=" + dayDelta + "&minuteDelta=" + minuteDelta +
             "&allDay=" + allDay + "&revertFunc=" + revertFunc ;
 
-            wicketAjaxGet("${eventBehaviourUrl}" + evenDropArgs , function() { }, function() { });
+            //wicketAjaxGet("${eventBehaviourUrl}" + evenDropArgs , function() { }, function() { });
+            callWicketEvent("${eventBehaviourUrl}", evenDropArgs , "eventDrop")
         }
 
     });
