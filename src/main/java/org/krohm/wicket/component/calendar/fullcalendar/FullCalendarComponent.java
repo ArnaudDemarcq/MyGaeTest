@@ -23,15 +23,19 @@ import org.slf4j.LoggerFactory;
 public class FullCalendarComponent extends LabeledWebMarkupContainer {
 
     private static final Logger logger = LoggerFactory.getLogger(FullCalendarComponent.class);
+    // Resources Folders
+    private static final String RESOURCES_PATH = "resources";
+    private static final String FC_PATH = RESOURCES_PATH + "/fullcalendar";
+    private static final String JQUERY_PATH = FC_PATH + "/jquery";
     // JavaScript Libs
-    private static final String FC_SCRIPT_NAME = "resources/fullcalendar/fullcalendar.min.js";
-    private static final String JQUERY_SCRIPT_NAME = "resources/jquery/jquery.js";
-    private static final String JQUERY_UI_SCRIPT_NAME = "resources/jquery/jquery-ui-custom.js";
+    private static final String FC_SCRIPT_NAME = FC_PATH + "/fullcalendar.min.js";
+    private static final String JQUERY_SCRIPT_NAME = JQUERY_PATH + "/jquery.js";
+    private static final String JQUERY_UI_SCRIPT_NAME = JQUERY_PATH + "/jquery-ui-custom.js";
     // Static CSSs
-    private static final String FX_CSS_NAME = "resources/fullcalendar/fullcalendar.css";
+    private static final String FX_CSS_NAME = FC_PATH + "/fullcalendar.css";
     // Custom JavaScripts
-    private static final String CUSTOM_JS_NAME = "resources/custom.js";
-    private static final String CUSTOM_JS_TEMPLATE_NAME = "resources/customTemplate.tpl.js";
+    private static final String CUSTOM_JS_NAME = RESOURCES_PATH + "/custom.js";
+    private static final String CUSTOM_JS_TEMPLATE_NAME = RESOURCES_PATH + "/customTemplate.tpl.js";
 
     public FullCalendarComponent(MarkupContainer parent, String id) {
         super(id);
@@ -69,7 +73,6 @@ public class FullCalendarComponent extends LabeledWebMarkupContainer {
                     logger.error(o + " ====> " + value[0]);
                 }
             }
-
         };
 
 
