@@ -2,9 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package org.krohm.wicket.component.calendar.fullcalendar;
-
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,10 +17,12 @@ import org.slf4j.LoggerFactory;
  * @author arnaud
  */
 public class Util {
+
     private static final Logger logger = LoggerFactory.getLogger(Util.class);
-     /*
+    /*
      * Static private Utils Methods
      */
+
     protected final static IModel<Map<String, Object>> getTemplateKeys(final Map<String, Object> originalMap) {
 
 
@@ -58,5 +58,4 @@ public class Util {
         }
         return returnMap;
     }
-
 }

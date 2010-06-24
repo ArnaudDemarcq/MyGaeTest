@@ -44,7 +44,7 @@ public class CalendarPage extends PocMainPage {
             }
         };
 
-        /*
+        
         for (IBehavior currentBehaviour : calendarOne.getBehaviors()) {
             logger.error(currentBehaviour.getClass().toString());
         }/**/

@@ -1,7 +1,14 @@
-function callWicketEvent(wicketUrl, wicketArgs, wicketEventType){
+function callWicketEventGet(wicketUrl, wicketArgs, wicketEventType){
     var finalUrl = wicketUrl + wicketArgs + "&EVENT_TYPE=" +wicketEventType;
     wicketAjaxGet(finalUrl , function() { }, function() { });
 }
+
+function callWicketEventPost(wicketUrl, body, wicketEventType){
+    var finalUrl = wicketUrl + wicketArgs + "&EVENT_TYPE=" +wicketEventType;
+    wicketAjaxGet(finalUrl , function() { }, function() { });
+}
+
+
 
 function getEventArguments(event){
     currentEventString = jsonToArgs(event,"Event");
@@ -28,4 +35,10 @@ function callWicketEventDrop(wicketUrl,event,dayDelta,minuteDelta,allDay,revertF
 function callWicketEventClick(wicketUrl,calEvent, jsEvent, view) {
     var eventClickArgs =getEventArguments(calEvent);
     callWicketEvent(wicketUrl, eventClickArgs , "eventClick");
+}
+
+function callWicketGetEventList(wicketUrl, date1, date2){
+     var test =  wicketAjaxGet(wicketUrl , function() { }, function() { });
+     alert(test);
+     return test;
 }

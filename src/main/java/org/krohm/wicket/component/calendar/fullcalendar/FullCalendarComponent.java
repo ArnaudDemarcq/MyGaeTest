@@ -10,10 +10,14 @@ import java.util.List;
 import java.util.Map;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.RequestCycle;
+import org.apache.wicket.Response;
+import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.CSSPackageResource;
+import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.JavascriptPackageResource;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.LabeledWebMarkupContainer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.protocol.http.WebRequestCycle;
@@ -68,7 +72,7 @@ public class FullCalendarComponent extends LabeledWebMarkupContainer {
         this.setOutputMarkupId(true);
 
         // Behaviour for Event Management (Drag / Drop / Click ...)
-        AjaxEventBehavior eventManagerAjaxBehaviour = new AjaxEventBehavior(ON_DROP_EVENT) {
+        AjaxEventBehavior eventManagerAjaxBehaviour = new AjaxEventBehavior("EventBehavior") {
 
             @Override
             protected void onEvent(AjaxRequestTarget art) {
@@ -82,14 +86,25 @@ public class FullCalendarComponent extends LabeledWebMarkupContainer {
             }
         };
         add(eventManagerAjaxBehaviour);
-        // Behavior for dynamic Event List Management
 
+        // Behavior for dynamic Event List Management
+        AbstractDefaultAjaxBehavior eventListAjaxBehaviour = new AbstractDefaultAjaxBehavior() {
+
+            @Override
+            protected void respond(AjaxRequestTarget target) {
+                logger.error("We ARE in the respond Method !!");
+                Response currentResponse = RequestCycle.get().getResponse();
+                currentResponse.reset();
+                target.appendJavascript("TEST !!!!");
+            }
+        };
+        add(eventListAjaxBehaviour);
 
         // Template Map Generation
         Map<String, Object> originalTemplateMap = new HashMap<String, Object>();
         originalTemplateMap.put("markupId", getMarkupId());
         originalTemplateMap.put("eventBehaviourUrl", eventManagerAjaxBehaviour.getCallbackUrl(true).toString());
-        
+        originalTemplateMap.put("getListBehaviourUrl", eventListAjaxBehaviour.getCallbackUrl(true).toString());
         add(TextTemplateHeaderContributor.forJavaScript(FullCalendarComponent.class,
                 CUSTOM_JS_TEMPLATE_NAME, Util.getTemplateKeys(originalTemplateMap)));
 

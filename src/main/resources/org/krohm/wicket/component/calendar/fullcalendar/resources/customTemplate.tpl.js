@@ -71,7 +71,13 @@ window.onload = function () {
         },
 
         eventClick: function(calEvent, jsEvent, view) {
-            callWicketEventClick("${eventBehaviourUrl}",calEvent, jsEvent, view);
+            // callWicketEventClick("${eventBehaviourUrl}",calEvent, jsEvent, view);
+            alert(callWicketGetEventList("${getListBehaviourUrl}",new Date(),new Date()));
+            var doc = xhr.responseXML;   // Assign the XML file to a var
+            var element = doc.getElementsByTagName('root').item(0);   // Read the first element
+            alert(element);
+
+      //      alert(callWicketGetEventList("${getListBehaviourUrl}",new Date(),new Date()));
         }
         
     });
