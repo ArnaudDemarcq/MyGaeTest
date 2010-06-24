@@ -15,10 +15,8 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.CSSPackageResource;
 import org.apache.wicket.markup.html.JavascriptPackageResource;
 import org.apache.wicket.markup.html.form.LabeledWebMarkupContainer;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.protocol.http.WebRequestCycle;
-import org.apache.wicket.util.collections.MiniMap;
 import org.apache.wicket.util.template.TextTemplateHeaderContributor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,27 +67,31 @@ public class FullCalendarComponent extends LabeledWebMarkupContainer {
         // Dynamic JavaScripts
         this.setOutputMarkupId(true);
 
-        // Behaviours *** TEST ***
-        AjaxEventBehavior testAjaxBehaviour1 = new AjaxEventBehavior(ON_DROP_EVENT) {
+        // Behaviour for Event Management (Drag / Drop / Click ...)
+        AjaxEventBehavior eventManagerAjaxBehaviour = new AjaxEventBehavior(ON_DROP_EVENT) {
 
             @Override
             protected void onEvent(AjaxRequestTarget art) {
 
                 logger.error("[***************************************]");
                 Map originalMap = ((WebRequestCycle) RequestCycle.get()).getRequest().getParameterMap();
-                Map<String, String> convertedMap = convertMap(originalMap);
+                Map<String, String> convertedMap = Util.convertMap(originalMap);
                 String eventType = convertedMap.get(EVENT_TYPE_KEY);
                 PseudoBehavior currentPseudoBehavior = pseudoBehaviors.get(eventType);
                 currentPseudoBehavior.execute(convertedMap);
-                logger.error(currentPseudoBehavior.toString());
-
             }
         };
+        add(eventManagerAjaxBehaviour);
+        // Behavior for dynamic Event List Management
 
 
-        add(testAjaxBehaviour1);
+        // Template Map Generation
+        Map<String, Object> originalTemplateMap = new HashMap<String, Object>();
+        originalTemplateMap.put("markupId", getMarkupId());
+        originalTemplateMap.put("eventBehaviourUrl", eventManagerAjaxBehaviour.getCallbackUrl(true).toString());
+        
         add(TextTemplateHeaderContributor.forJavaScript(FullCalendarComponent.class,
-                CUSTOM_JS_TEMPLATE_NAME, getTemplateKeys(this, testAjaxBehaviour1)));
+                CUSTOM_JS_TEMPLATE_NAME, Util.getTemplateKeys(originalTemplateMap)));
 
     }
     /*
@@ -113,46 +115,6 @@ public class FullCalendarComponent extends LabeledWebMarkupContainer {
     public void onEventClick(EventBean currentEventBean) {
         logger.error("we are in the eventClick default Method");
         logger.error("" + currentEventBean);
-    }
-
-    /*
-     * Static private Utils Methods
-     */
-    // Values for Dynamic JavaScripts
-    // TODO => Remake it  getTemplateKeys (Map<String,Object>)
-    private final static IModel<Map<String, Object>> getTemplateKeys(
-            final FullCalendarComponent currentCalendar, final AjaxEventBehavior currentBehaviour) {
-
-
-        IModel<Map<String, Object>> variablesModel = new AbstractReadOnlyModel<Map<String, Object>>() {
-
-            private Map<String, Object> variables;
-            private static final int MAX_ENTRIES = 32;
-
-            public Map<String, Object> getObject() {
-                if (variables == null) {
-                    this.variables = new MiniMap<String, Object>(MAX_ENTRIES);
-                    variables.put("markupId", currentCalendar.getMarkupId());
-                    variables.put("eventBehaviourUrl", currentBehaviour.getCallbackUrl(true).toString());
-                }
-                return variables;
-            }
-        };
-        return variablesModel;
-    }
-
-    private static final Map<String, String> convertMap(Map<Object, Object> originalMap) {
-        Map<String, String> returnMap = new HashMap<String, String>();
-        for (Object objectKey : originalMap.keySet()) {
-            Object[] objectValue = (Object[]) originalMap.get(objectKey);
-            if (logger.isDebugEnabled()) {
-                logger.debug("Found key :<" + objectKey + "> With value :<" + objectValue[0] + ">");
-            }
-            String key = (String) objectKey;
-            String value = (String) objectValue[0];
-            returnMap.put(key, value);
-        }
-        return returnMap;
     }
 
     /*
