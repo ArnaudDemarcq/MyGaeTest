@@ -6,6 +6,7 @@ package test.pages;
 
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.behavior.IBehavior;
+import org.krohm.wicket.component.calendar.fullcalendar.EventBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.krohm.wicket.component.calendar.fullcalendar.FullCalendarComponent;
@@ -21,7 +22,18 @@ public class CalendarPage extends PocMainPage {
     public CalendarPage(PageParameters parameters) {
         super(parameters);
 
-        FullCalendarComponent calendarOne = new FullCalendarComponent(this,"calendarOne");
+        FullCalendarComponent calendarOne = new FullCalendarComponent(this, "calendarOne") {
+
+            @Override
+            public void onEventClick(EventBean currentEventBean) {
+                logger.error("We are in the End User  Implementation !");
+                logger.error("ID : <" + currentEventBean.getId() + ">");
+                logger.error("TITLE : <" + currentEventBean.getTitle() + ">");
+
+
+                
+            }
+        };
 
         for (IBehavior currentBehaviour : calendarOne.getBehaviors()) {
             logger.error(currentBehaviour.getClass().toString());

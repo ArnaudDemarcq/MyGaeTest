@@ -4,6 +4,9 @@
  */
 package org.krohm.wicket.component.calendar.fullcalendar;
 
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.RequestCycle;
@@ -23,6 +26,10 @@ import org.slf4j.LoggerFactory;
 public class FullCalendarComponent extends LabeledWebMarkupContainer {
 
     private static final Logger logger = LoggerFactory.getLogger(FullCalendarComponent.class);
+    // Constants
+    private static final String ON_CLICK_EVENT = "eventClick";
+    private static final String ON_DROP_EVENT = "eventDrop";
+    private static final String EVENT_TYPE_KEY = "EVENT_TYPE";
     // Resources Folders
     private static final String RESOURCES_PATH = "resources";
     private static final String FC_PATH = RESOURCES_PATH + "/fullcalendar";
@@ -36,6 +43,8 @@ public class FullCalendarComponent extends LabeledWebMarkupContainer {
     // Custom JavaScripts
     private static final String CUSTOM_JS_NAME = RESOURCES_PATH + "/custom.js";
     private static final String CUSTOM_JS_TEMPLATE_NAME = RESOURCES_PATH + "/customTemplate.tpl.js";
+    // Utils
+    private final Map<String, PseudoBehavior> pseudoBehaviors = getPseudoBehaviors();
 
     public FullCalendarComponent(MarkupContainer parent, String id) {
         super(id);
@@ -49,7 +58,7 @@ public class FullCalendarComponent extends LabeledWebMarkupContainer {
         initJs();
     }
 
-    private void initJs() {
+    private final void initJs() {
         // Static JavaScripts
         add(JavascriptPackageResource.getHeaderContribution(FullCalendarComponent.class, JQUERY_SCRIPT_NAME));
         add(JavascriptPackageResource.getHeaderContribution(FullCalendarComponent.class, JQUERY_UI_SCRIPT_NAME));
@@ -61,17 +70,19 @@ public class FullCalendarComponent extends LabeledWebMarkupContainer {
         this.setOutputMarkupId(true);
 
         // Behaviours *** TEST ***
-        AjaxEventBehavior testAjaxBehaviour1 = new AjaxEventBehavior("eventDrop") {
+        AjaxEventBehavior testAjaxBehaviour1 = new AjaxEventBehavior(ON_DROP_EVENT) {
 
             @Override
             protected void onEvent(AjaxRequestTarget art) {
 
                 logger.error("[***************************************]");
-                Map map = ((WebRequestCycle) RequestCycle.get()).getRequest().getParameterMap();
-                for (Object o : map.keySet()) {
-                    Object[] value = (Object[]) map.get(o);
-                    logger.error(o + " ====> " + value[0]);
-                }
+                Map originalMap = ((WebRequestCycle) RequestCycle.get()).getRequest().getParameterMap();
+                Map<String, String> convertedMap = convertMap(originalMap);
+                String eventType = convertedMap.get(EVENT_TYPE_KEY);
+                PseudoBehavior currentPseudoBehavior = pseudoBehaviors.get(eventType);
+                currentPseudoBehavior.execute(convertedMap);
+                logger.error(currentPseudoBehavior.toString());
+
             }
         };
 
@@ -81,9 +92,35 @@ public class FullCalendarComponent extends LabeledWebMarkupContainer {
                 CUSTOM_JS_TEMPLATE_NAME, getTemplateKeys(this, testAjaxBehaviour1)));
 
     }
+    /*
+     * Overridable Methods
+     */
 
+    public List<EventBean> getEventList(Date startDate, Date endDate) {
+        return null;
+    }
+
+    public void onEventDrop(EventBean currentEventBean, Integer dayDelta, Integer minuteDelta,
+            Boolean allDay) {
+        logger.error("we are in the eventDrop default Method");
+        logger.error("" + currentEventBean);
+        logger.error("" + dayDelta);
+        logger.error("" + minuteDelta);
+        logger.error("" + allDay);
+
+    }
+
+    public void onEventClick(EventBean currentEventBean) {
+        logger.error("we are in the eventClick default Method");
+        logger.error("" + currentEventBean);
+    }
+
+    /*
+     * Static private Utils Methods
+     */
     // Values for Dynamic JavaScripts
-    private IModel<Map<String, Object>> getTemplateKeys(
+    // TODO => Remake it  getTemplateKeys (Map<String,Object>)
+    private final static IModel<Map<String, Object>> getTemplateKeys(
             final FullCalendarComponent currentCalendar, final AjaxEventBehavior currentBehaviour) {
 
 
@@ -104,11 +141,67 @@ public class FullCalendarComponent extends LabeledWebMarkupContainer {
         return variablesModel;
     }
 
-    private void logEvent(Object eventObject) {
-        if (eventObject == null) {
-            logger.error("Null Event");
+    private static final Map<String, String> convertMap(Map<Object, Object> originalMap) {
+        Map<String, String> returnMap = new HashMap<String, String>();
+        for (Object objectKey : originalMap.keySet()) {
+            Object[] objectValue = (Object[]) originalMap.get(objectKey);
+            if (logger.isDebugEnabled()) {
+                logger.debug("Found key :<" + objectKey + "> With value :<" + objectValue[0] + ">");
+            }
+            String key = (String) objectKey;
+            String value = (String) objectValue[0];
+            returnMap.put(key, value);
         }
-        logger.error(eventObject.toString());
-        logger.error(eventObject.getClass().toString());
+        return returnMap;
+    }
+
+    /*
+     *  PseudoBehaviours
+     */
+    private final Map<String, PseudoBehavior> getPseudoBehaviors() {
+        Map<String, PseudoBehavior> returnMap = new HashMap<String, PseudoBehavior>();
+        returnMap.put(ON_DROP_EVENT, new EventDragPseudoBehavior());
+        returnMap.put(ON_CLICK_EVENT, new EventClickPseudoBehavior());
+        return returnMap;
+    }
+
+    private interface PseudoBehavior {
+
+        public void execute(Map<String, String> parameters);
+    }
+
+    private class EventDragPseudoBehavior implements PseudoBehavior {
+
+        private static final String DAY_DELTA_KEY = "dayDelta";
+        private static final String MINUTE_DELTA_KEY = "minuteDelta";
+        private static final String ALL_DAY_KEY = "allDay";
+        private static final String REVERT_FUNC_KEY = "revertFunc";
+
+        public void execute(Map<String, String> parameters) {
+            logger.error("we are in the eventDrop PseudoBehavior");
+            try {
+                EventBean currentEventBean = EventFactory.getEventBean(parameters);
+                Integer dayDelta = Integer.parseInt(parameters.get(DAY_DELTA_KEY));
+                Integer minuteDelta = Integer.parseInt(parameters.get(MINUTE_DELTA_KEY));
+                Boolean allDay = "true".equals(parameters.get(ALL_DAY_KEY));
+
+                onEventDrop(currentEventBean, dayDelta, minuteDelta, allDay);
+            } catch (Exception ex) {
+                logger.error("Error on Drag / Drop Event", ex);
+            }
+
+        }
+    }
+
+    private class EventClickPseudoBehavior implements PseudoBehavior {
+
+        public void execute(Map<String, String> parameters) {
+            try {
+                EventBean currentEventBean = EventFactory.getEventBean(parameters);
+                onEventClick(currentEventBean);
+            } catch (Exception ex) {
+                logger.error("Error on Click Event", ex);
+            }
+        }
     }
 }

@@ -5,6 +5,7 @@ function callWicketEvent(wicketUrl, wicketArgs, wicketEventType){
 
 function getEventArguments(event){
     currentEventString = jsonToArgs(event,"Event");
+    currentEventString += "&Event_GEN_start=" + event.start.getTime();
     return currentEventString;
 }
 

@@ -73,6 +73,7 @@ window.onload = function () {
         eventClick: function(calEvent, jsEvent, view) {
             callWicketEventClick("${eventBehaviourUrl}",calEvent, jsEvent, view);
         }
+        
     });
 };
 
