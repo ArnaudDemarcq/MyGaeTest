@@ -39,12 +39,13 @@ public class CalendarPage extends PocMainPage {
                 List<EventBean> returnList = new ArrayList<EventBean>();
 
                 returnList.add(getEventBean("First Event Ever !", new Date()));
+                returnList.add(getEventBean("Second Event Ever !", new Date()));
 
                 return returnList;
             }
         };
 
-        
+
         for (IBehavior currentBehaviour : calendarOne.getBehaviors()) {
             logger.error(currentBehaviour.getClass().toString());
         }/**/

@@ -6,6 +6,7 @@ package org.krohm.wicket.component.calendar.fullcalendar;
 
 import java.util.Date;
 import java.util.Map;
+import net.sf.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -111,15 +112,20 @@ public class EventBean {
     /*
      * Json Serialization
      */
+
+    /*
     public final String toJson() {
-        return "{\n" + jsonContent() + "\n}";
+        JSONObject jsonObject = JSONObject.fromBean(this);
+        return jsonObject.toString();
+      //  return "{\n" + jsonContent() + "\n}";
     }
 
     // todo : change to StringWriter
+    
     protected String jsonContent() {
         String returnString = "";
         returnString += "\"title\": '" + getTitle() + "',\n";
         returnString += "\"start\": 1278799200";
         return returnString;
-    } //&start=1275170400&end=1278799200
+    } //&start=1275170400&end=1278799200 /**/
 }

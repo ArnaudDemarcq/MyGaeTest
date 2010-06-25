@@ -80,16 +80,21 @@ window.onload = function () {
         }
         ],
 
-        events_OLD4: "./${getListBehaviourUrl}",
+        events_OLD6: "./${getListBehaviourUrl}",
         
         events: function(start, end, callback) {
             $.getJSON("${getListBehaviourUrl}" + "&start=" + start.getTime() +"&end=" + end.getTime(),
                 function(data){
-                    alert("hop ?");
+                    //var myString = Object.toJSON(data);
+                    alert("hop ?" + data);
+                    alert("hop ?" + data[0].title);
+
+                    alert("hop !" + data);
+                /*
                     $.each(data.items, function(i,item){
                         alert(i);
                     });
-                    alert("hop !");
+                    alert("hop !");/**/
                 });
         /*
             callWicketGetEventList("${getListBehaviourUrl}" + "&start=" + start.getTime() +"&end=" + end.getTime() ,start,end);
@@ -97,7 +102,7 @@ window.onload = function () {
             alert("hop ?");
             alert(currentEvent[0].title);
             alert("hop !");
-            callback(getEvents());/**/
+            /**/
         },
 
         eventDrop: function(event,dayDelta,minuteDelta,allDay,revertFunc) {

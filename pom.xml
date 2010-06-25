@@ -149,6 +149,16 @@
             <artifactId>JfcComponents</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
+        <!-- Dependencies for Json -->
+        <dependency>
+            <groupId>net.sf.json-lib</groupId>
+            <artifactId>json-lib</artifactId>
+            <version>1.0</version>
+            <classifier>jdk15</classifier>
+        </dependency>  
+
+
+
     </dependencies>
     <repositories>
         <!-- SPRING Repositories -->

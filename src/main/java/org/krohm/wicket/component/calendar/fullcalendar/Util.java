@@ -7,6 +7,7 @@ package org.krohm.wicket.component.calendar.fullcalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import net.sf.json.JSONArray;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.collections.MiniMap;
@@ -64,21 +65,27 @@ public class Util {
      * Private Methods
      */
     // todo : use stringbuffers
+    /*
     protected final static String getEventListJson(List<EventBean> eventList) {
-        if (eventList == null)
-        {
-            return "[]";
-        }
-        String returnString = "[";
-        int eventNumber = 0;
-        for (EventBean currentBean : eventList){
-            if (eventNumber > 0){
-                returnString +=",\n";
-            }
-            returnString +=currentBean.toJson();
-            eventNumber ++;
-        }
-        returnString +="]";
-        return returnString;
+    if (eventList == null)
+    {
+    return "[]";
     }
+    String returnString = "[";
+    int eventNumber = 0;
+    for (EventBean currentBean : eventList){
+    if (eventNumber > 0){
+    returnString +=",\n";
+    }
+    returnString +=currentBean.toJson();
+    eventNumber ++;
+    }
+    returnString +="]";
+    return returnString;
+    }/**/
+    protected final static JSONArray getEventListJson(List<EventBean> eventList) {
+        JSONArray jsonArray = JSONArray.fromCollection(eventList);
+        return jsonArray;
+    }/**/
+
 }
