@@ -108,7 +108,18 @@ public class EventBean {
         this.url = url;
     }
 
-    public String toJson() {
-        return toString();
+    /*
+     * Json Serialization
+     */
+    public final String toJson() {
+        return "{\n" + jsonContent() + "\n}";
     }
+
+    // todo : change to StringWriter
+    protected String jsonContent() {
+        String returnString = "";
+        returnString += "\"title\": '" + getTitle() + "',\n";
+        returnString += "\"start\": 1278799200";
+        return returnString;
+    } //&start=1275170400&end=1278799200
 }

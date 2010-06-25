@@ -1,9 +1,23 @@
+var jsonUrl = "${getListBehaviourUrl}&start=1275170400&end=1278799200";
+
+var events = 14;
+function setEvents(eventList){
+    events = eventList;
+    alert(events);
+}
+
+function getEvents(){   
+    return events;
+}
+
 window.onload = function () {
 
     var date = new Date();
     var d = date.getDate();
     var m = date.getMonth();
     var y = date.getFullYear();
+
+
 
     $("#${markupId}").fullCalendar({
 
@@ -19,7 +33,7 @@ window.onload = function () {
 
 
         //  },
-        events: [
+        events_OLD: [
         {
             title: 'All Day Event',
             start: new Date(y, m, 1)
@@ -66,18 +80,32 @@ window.onload = function () {
         }
         ],
 
+        events_OLD4: "./${getListBehaviourUrl}",
+        
+        events: function(start, end, callback) {
+            $.getJSON("${getListBehaviourUrl}" + "&start=" + start.getTime() +"&end=" + end.getTime(),
+                function(data){
+                    alert("hop ?");
+                    $.each(data.items, function(i,item){
+                        alert(i);
+                    });
+                    alert("hop !");
+                });
+        /*
+            callWicketGetEventList("${getListBehaviourUrl}" + "&start=" + start.getTime() +"&end=" + end.getTime() ,start,end);
+            var currentEvent = getEvents();
+            alert("hop ?");
+            alert(currentEvent[0].title);
+            alert("hop !");
+            callback(getEvents());/**/
+        },
+
         eventDrop: function(event,dayDelta,minuteDelta,allDay,revertFunc) {
             callWicketEventDrop("${eventBehaviourUrl}",event,dayDelta,minuteDelta,allDay,revertFunc);
         },
 
         eventClick: function(calEvent, jsEvent, view) {
-            // callWicketEventClick("${eventBehaviourUrl}",calEvent, jsEvent, view);
-            alert(callWicketGetEventList("${getListBehaviourUrl}",new Date(),new Date()));
-            var doc = xhr.responseXML;   // Assign the XML file to a var
-            var element = doc.getElementsByTagName('root').item(0);   // Read the first element
-            alert(element);
-
-      //      alert(callWicketGetEventList("${getListBehaviourUrl}",new Date(),new Date()));
+            callWicketEventClick("${eventBehaviourUrl}",calEvent, jsEvent, view);
         }
         
     });

@@ -5,6 +5,7 @@
 package org.krohm.wicket.component.calendar.fullcalendar;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
@@ -20,7 +21,7 @@ public class Util {
 
     private static final Logger logger = LoggerFactory.getLogger(Util.class);
     /*
-     * Static private Utils Methods
+     * Static public Utils Methods
      */
 
     protected final static IModel<Map<String, Object>> getTemplateKeys(final Map<String, Object> originalMap) {
@@ -57,5 +58,27 @@ public class Util {
             returnMap.put(key, value);
         }
         return returnMap;
+    }
+
+    /*
+     * Private Methods
+     */
+    // todo : use stringbuffers
+    protected final static String getEventListJson(List<EventBean> eventList) {
+        if (eventList == null)
+        {
+            return "[]";
+        }
+        String returnString = "[";
+        int eventNumber = 0;
+        for (EventBean currentBean : eventList){
+            if (eventNumber > 0){
+                returnString +=",\n";
+            }
+            returnString +=currentBean.toJson();
+            eventNumber ++;
+        }
+        returnString +="]";
+        return returnString;
     }
 }

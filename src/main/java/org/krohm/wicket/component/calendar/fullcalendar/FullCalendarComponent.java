@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.apache.wicket.IRequestTarget;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Response;
@@ -87,16 +88,69 @@ public class FullCalendarComponent extends LabeledWebMarkupContainer {
         };
         add(eventManagerAjaxBehaviour);
 
+
+        IRequestTarget testIRequestTarget = new IRequestTarget() {
+
+            public void detach(RequestCycle requestCycle) {
+            }
+
+            public void respond(RequestCycle requestCycle) {
+                logger.error("[#######################################]");
+            }
+        };
         // Behavior for dynamic Event List Management
+
         AbstractDefaultAjaxBehavior eventListAjaxBehaviour = new AbstractDefaultAjaxBehavior() {
 
             @Override
             protected void respond(AjaxRequestTarget target) {
                 logger.error("We ARE in the respond Method !!");
+                logger.error("[#######################################]");
+                // getArguments
+                Map originalMap = ((WebRequestCycle) RequestCycle.get()).getRequest().getParameterMap();
+                Map<String, String> convertedMap = Util.convertMap(originalMap);
+                Date startDate = new Date(1000 * Long.parseLong(convertedMap.get("start")));
+                Date endDate = new Date(1000 * Long.parseLong(convertedMap.get("end")));
+                logger.error("Start Date :<" + startDate + ">. End Date :<" + endDate + ">.");
+                logger.error(convertedMap.toString());
+
+                getRequestCycle().setRequestTarget(new IRequestTarget() {
+
+                    @Override
+                    public void detach(RequestCycle requestCycle) {
+                        // nothing to do here
+                    }
+
+                    @Override
+                    public void respond(RequestCycle requestCycle) {
+                        // Add JSON script to the response
+                        String eventJson = Util.getEventListJson(getEventList(new Date(), new Date()));
+                        logger.error(eventJson);
+                        requestCycle.getResponse().write(eventJson);
+                    }
+                });
+
+
+                //Response currentResponse = RequestCycle.get().getResponse();
+                //currentResponse.reset();
+
+                //String eventJson = Util.getEventListJson(getEventList(new Date(), new Date()));
+                //logger.error(eventJson);
+                //currentResponse.println(eventJson + "\n \\\\ ");
+                //
+                //target.appendJavascript(eventJson +"\n \\\\\ ");
+            }
+
+            /*
+            protected void respond_old(AjaxRequestTarget target) {
+                logger.error("We ARE in the respond Method !!");
+                logger.error("[#######################################]");
                 Response currentResponse = RequestCycle.get().getResponse();
                 currentResponse.reset();
-                target.appendJavascript("TEST !!!!");
-            }
+                String eventJson = Util.getEventListJson(getEventList(new Date(), new Date()));
+                logger.error(eventJson);
+                target.appendJavascript("testFunction(" + eventJson + ");");
+            }/**/
         };
         add(eventListAjaxBehaviour);
 
@@ -105,14 +159,17 @@ public class FullCalendarComponent extends LabeledWebMarkupContainer {
         originalTemplateMap.put("markupId", getMarkupId());
         originalTemplateMap.put("eventBehaviourUrl", eventManagerAjaxBehaviour.getCallbackUrl(true).toString());
         originalTemplateMap.put("getListBehaviourUrl", eventListAjaxBehaviour.getCallbackUrl(true).toString());
+        //originalTemplateMap.put("getListBehaviourUrl", testIRequestTarget.);
+
+
         add(TextTemplateHeaderContributor.forJavaScript(FullCalendarComponent.class,
                 CUSTOM_JS_TEMPLATE_NAME, Util.getTemplateKeys(originalTemplateMap)));
 
     }
+
     /*
      * Overridable Methods
      */
-
     public List<EventBean> getEventList(Date startDate, Date endDate) {
         return null;
     }
