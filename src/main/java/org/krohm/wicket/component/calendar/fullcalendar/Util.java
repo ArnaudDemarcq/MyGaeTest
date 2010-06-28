@@ -65,35 +65,11 @@ public class Util {
     /*
      * Private Methods
      */
-    // todo : use stringbuffers
-    /*
-    protected final static String getEventListJson(List<EventBean> eventList) {
-    if (eventList == null)
-    {
-    return "[]";
-    }
-    String returnString = "[";
-    int eventNumber = 0;
-    for (EventBean currentBean : eventList){
-    if (eventNumber > 0){
-    returnString +=",\n";
-    }
-    returnString +=currentBean.toJson();
-    eventNumber ++;
-    }
-    returnString +="]";
-    return returnString;
-    }/**/
-    protected final static JSONArray getEventListJson_old(List<EventBean> eventList) {
-        JSONArray jsonArray = JSONArray.fromCollection(eventList);
-        return jsonArray;
-    }/**/
-
 
     protected final static JSONArray getEventListJson(List<EventBean> eventList) {
         JSONArray jsonArray = new JSONArray();
         for (EventBean currentEvent : eventList) {
-            jsonArray.put(JSONObject.fromMap(currentEvent.getJsonData()));
+            jsonArray.put(JSONObject.fromMap(currentEvent.jsonData()));
         }
         return jsonArray;
     }/**/

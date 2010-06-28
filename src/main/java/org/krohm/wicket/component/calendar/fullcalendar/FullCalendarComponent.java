@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.krohm.wicket.component.calendar.fullcalendar;
 
 import java.util.Date;
@@ -11,14 +7,11 @@ import java.util.Map;
 import org.apache.wicket.IRequestTarget;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.RequestCycle;
-import org.apache.wicket.Response;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.CSSPackageResource;
-import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.JavascriptPackageResource;
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.LabeledWebMarkupContainer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.protocol.http.WebRequestCycle;
@@ -26,6 +19,10 @@ import org.apache.wicket.util.template.TextTemplateHeaderContributor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ *
+ * @author arnaud
+ */
 public class FullCalendarComponent extends LabeledWebMarkupContainer {
 
     private static final Logger logger = LoggerFactory.getLogger(FullCalendarComponent.class);
@@ -62,23 +59,13 @@ public class FullCalendarComponent extends LabeledWebMarkupContainer {
     }
 
     private final void initJs() {
-        // Static JavaScripts
-        add(JavascriptPackageResource.getHeaderContribution(FullCalendarComponent.class, JQUERY_SCRIPT_NAME));
-        add(JavascriptPackageResource.getHeaderContribution(FullCalendarComponent.class, JQUERY_UI_SCRIPT_NAME));
-        add(JavascriptPackageResource.getHeaderContribution(FullCalendarComponent.class, FC_SCRIPT_NAME));
-        add(JavascriptPackageResource.getHeaderContribution(FullCalendarComponent.class, CUSTOM_JS_NAME));
-        // Static CSSs
-        add(CSSPackageResource.getHeaderContribution(FullCalendarComponent.class, FX_CSS_NAME));
-        // Dynamic JavaScripts
-        this.setOutputMarkupId(true);
 
         // Behaviour for Event Management (Drag / Drop / Click ...)
         AjaxEventBehavior eventManagerAjaxBehaviour = new AjaxEventBehavior("EventBehavior") {
 
             @Override
             protected void onEvent(AjaxRequestTarget art) {
-
-                logger.error("[***************************************]");
+                logger.info("Event Received");
                 Map originalMap = ((WebRequestCycle) RequestCycle.get()).getRequest().getParameterMap();
                 Map<String, String> convertedMap = Util.convertMap(originalMap);
                 String eventType = convertedMap.get(EVENT_TYPE_KEY);
@@ -86,107 +73,76 @@ public class FullCalendarComponent extends LabeledWebMarkupContainer {
                 currentPseudoBehavior.execute(convertedMap);
             }
         };
-        add(eventManagerAjaxBehaviour);
 
-
-        IRequestTarget testIRequestTarget = new IRequestTarget() {
-
-            public void detach(RequestCycle requestCycle) {
-            }
-
-            public void respond(RequestCycle requestCycle) {
-                logger.error("[#######################################]");
-            }
-        };
-        // Behavior for dynamic Event List Management
-
+        // Behavior for getting Event List
         AbstractDefaultAjaxBehavior eventListAjaxBehaviour = new AbstractDefaultAjaxBehavior() {
 
             @Override
             protected void respond(AjaxRequestTarget target) {
-                logger.error("We ARE in the respond Method !!");
-                logger.error("[#######################################]");
+                logger.info("Getting Event List");
                 // getArguments
                 Map originalMap = ((WebRequestCycle) RequestCycle.get()).getRequest().getParameterMap();
                 Map<String, String> convertedMap = Util.convertMap(originalMap);
-                Date startDate = new Date(1000 * Long.parseLong(convertedMap.get("start")));
-                Date endDate = new Date(1000 * Long.parseLong(convertedMap.get("end")));
-                logger.error("Start Date :<" + startDate + ">. End Date :<" + endDate + ">.");
-                logger.error(convertedMap.toString());
-
+                final Date startDate = new Date(1000 * Long.parseLong(convertedMap.get("start")));
+                final Date endDate = new Date(1000 * Long.parseLong(convertedMap.get("end")));
+                logger.info("Start Date :<" + startDate + ">. End Date :<" + endDate + ">.");
+                if (logger.isDebugEnabled()) {
+                    logger.debug(convertedMap.toString());
+                }
                 getRequestCycle().setRequestTarget(new IRequestTarget() {
-
-                    @Override
-                    public void detach(RequestCycle requestCycle) {
-                        // nothing to do here
-                    }
 
                     @Override
                     public void respond(RequestCycle requestCycle) {
                         // Add JSON script to the response
-                        String eventJson = Util.getEventListJson(getEventList(new Date(), new Date())).toString();
+                        String eventJson = Util.getEventListJson(getEventList(startDate, endDate)).toString();
                         logger.error(eventJson);
                         requestCycle.getResponse().write(eventJson);
                     }
+
+                    @Override
+                    public void detach(RequestCycle rc) {
+                    }
                 });
-
-
-                //Response currentResponse = RequestCycle.get().getResponse();
-                //currentResponse.reset();
-
-                //String eventJson = Util.getEventListJson(getEventList(new Date(), new Date()));
-                //logger.error(eventJson);
-                //currentResponse.println(eventJson + "\n \\\\ ");
-                //
-                //target.appendJavascript(eventJson +"\n \\\\\ ");
             }
-
-            /*
-            protected void respond_old(AjaxRequestTarget target) {
-                logger.error("We ARE in the respond Method !!");
-                logger.error("[#######################################]");
-                Response currentResponse = RequestCycle.get().getResponse();
-                currentResponse.reset();
-                String eventJson = Util.getEventListJson(getEventList(new Date(), new Date()));
-                logger.error(eventJson);
-                target.appendJavascript("testFunction(" + eventJson + ");");
-            }/**/
         };
+        // Custom Beheviors
+        add(eventManagerAjaxBehaviour);
         add(eventListAjaxBehaviour);
-
         // Template Map Generation
         Map<String, Object> originalTemplateMap = new HashMap<String, Object>();
         originalTemplateMap.put("markupId", getMarkupId());
         originalTemplateMap.put("eventBehaviourUrl", eventManagerAjaxBehaviour.getCallbackUrl(true).toString());
         originalTemplateMap.put("getListBehaviourUrl", eventListAjaxBehaviour.getCallbackUrl(true).toString());
-        //originalTemplateMap.put("getListBehaviourUrl", testIRequestTarget.);
 
-
+        // Dynamic JavaScript
         add(TextTemplateHeaderContributor.forJavaScript(FullCalendarComponent.class,
                 CUSTOM_JS_TEMPLATE_NAME, Util.getTemplateKeys(originalTemplateMap)));
-
+        // Static JavaScripts
+        add(JavascriptPackageResource.getHeaderContribution(FullCalendarComponent.class, JQUERY_SCRIPT_NAME));
+        add(JavascriptPackageResource.getHeaderContribution(FullCalendarComponent.class, JQUERY_UI_SCRIPT_NAME));
+        add(JavascriptPackageResource.getHeaderContribution(FullCalendarComponent.class, FC_SCRIPT_NAME));
+        add(JavascriptPackageResource.getHeaderContribution(FullCalendarComponent.class, CUSTOM_JS_NAME));
+        // Static CSSs
+        add(CSSPackageResource.getHeaderContribution(FullCalendarComponent.class, FX_CSS_NAME));
+        this.setOutputMarkupId(true);
     }
 
     /*
      * Overridable Methods
      */
     public List<EventBean> getEventList(Date startDate, Date endDate) {
+        logger.debug("Executing getEventList default Method");
         return null;
     }
 
     public void onEventDrop(EventBean currentEventBean, Integer dayDelta, Integer minuteDelta,
             Boolean allDay) {
-        logger.error("we are in the eventDrop default Method");
-        logger.error("" + currentEventBean);
-        logger.error("" + dayDelta);
-        logger.error("" + minuteDelta);
-        logger.error("" + allDay);
-
+        logger.debug("Executing eventDrop default Method");
     }
 
     public void onEventClick(EventBean currentEventBean) {
-        logger.error("we are in the eventClick default Method");
-        logger.error("" + currentEventBean);
+        logger.debug("Executing eventClick default Method");
+
     }
 
     /*
@@ -218,7 +174,6 @@ public class FullCalendarComponent extends LabeledWebMarkupContainer {
                 Integer dayDelta = Integer.parseInt(parameters.get(DAY_DELTA_KEY));
                 Integer minuteDelta = Integer.parseInt(parameters.get(MINUTE_DELTA_KEY));
                 Boolean allDay = "true".equals(parameters.get(ALL_DAY_KEY));
-
                 onEventDrop(currentEventBean, dayDelta, minuteDelta, allDay);
             } catch (Exception ex) {
                 logger.error("Error on Drag / Drop Event", ex);

@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.krohm.wicket.component.calendar.fullcalendar;
 
 import java.util.Date;
@@ -35,34 +31,6 @@ public class EventBean {
     public EventBean() {
     }
 
-    public EventBean(Map<String, String> dataMap) {
-        populateFromMap(dataMap);
-    }
-
-    public void populateFromMap(Map<String, String> dataMap) {
-        for (String key : dataMap.keySet()) {
-            String value = dataMap.get(key);
-            logger.error("Found key :<" + key + "> With value :<" + value + ">");
-        }
-        // Mandatory Fields :
-        this.setTitle(dataMap.get(EVENT_TITLE_KEY));
-        // Optional Fields :
-
-        /*
-        if (dataMap.get(EVENT_ID_KEY) != null) {
-        this.setId(dataMap.get(EVENT_ID_KEY));
-        }/**/
-
-        // Dates
-        String startString = dataMap.get(EVENT_START_KEY);
-        Long startLong = Long.parseLong(startString);
-        Date startDate = new Date(startLong);
-        logger.error("=>>>>>>>>>>>>>>>" + startDate);
-
-
-
-    }
-
     public Boolean getAllDay() {
         return allDay;
     }
@@ -93,11 +61,7 @@ public class EventBean {
 
     public void setUrl(String url) {
         this.url = url;
-    }/**/
-
-    /*
-     * Json Serialization
-     */
+    }
 
     public Date getStart() {
         return start;
@@ -115,27 +79,40 @@ public class EventBean {
         this.title = title;
     }
 
-    protected Map<String, Object> getJsonData() {
-        Map<String, Object> returnMap = new HashMap<String, Object>();
-        returnMap.put("title", getTitle());
-        returnMap.put("start", (getStart().getTime() /1000 ));//1278799200
-        logger.error("" + (getStart().getTime() /1000 ));
-        logger.error("" + 1277739109);
-        return returnMap;
+    /*
+     * Population from DataMap
+     */
+    public void populateFromMap(Map<String, String> dataMap) {
+        for (String key : dataMap.keySet()) {
+            String value = dataMap.get(key);
+            logger.error("Found key :<" + key + "> With value :<" + value + ">");
+        }
+        // Mandatory Fields :
+        this.setTitle(dataMap.get(EVENT_TITLE_KEY));
+        // Optional Fields :
+
+        /*
+        if (dataMap.get(EVENT_ID_KEY) != null) {
+        this.setId(dataMap.get(EVENT_ID_KEY));
+        }/**/
+
+        // Dates
+        String startString = dataMap.get(EVENT_START_KEY);
+        Long startLong = Long.parseLong(startString);
+        Date startDate = new Date(startLong);
+        logger.error("=>>>>>>>>>>>>>>>" + startDate);
+
+
+
     }
     /*
-    public final String toJson() {
-    JSONObject jsonObject = JSONObject.fromBean(this);
-    return jsonObject.toString();
-    //  return "{\n" + jsonContent() + "\n}";
-    }
+     * Json Serialization
+     */
 
-    // todo : change to StringWriter
-    
-    protected String jsonContent() {
-    String returnString = "";
-    returnString += "\"title\": '" + getTitle() + "',\n";
-    returnString += "\"start\": 1278799200";
-    return returnString;
-    } //&start=1275170400&end=1278799200 /**/
+    protected Map<String, Object> jsonData() {
+        Map<String, Object> returnMap = new HashMap<String, Object>();
+        returnMap.put("title", getTitle());
+        returnMap.put("start", (getStart().getTime() / 1000));//1278799200
+        return returnMap;
+    }
 }
