@@ -1,4 +1,7 @@
-window.onload = function () {
+//window.onload = function () {
+ $(document).ready(function() {
+   // do stuff when DOM is ready
+
     
     $("#${markupId}").fullCalendar({
 
@@ -25,5 +28,5 @@ window.onload = function () {
         }
         
     });
-};
-
+//};
+ });

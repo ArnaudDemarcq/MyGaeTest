@@ -60,6 +60,14 @@ public class FullCalendarComponent extends LabeledWebMarkupContainer {
 
     private final void initJs() {
 
+        // Static JavaScripts
+        add(JavascriptPackageResource.getHeaderContribution(FullCalendarComponent.class, JQUERY_SCRIPT_NAME));
+        add(JavascriptPackageResource.getHeaderContribution(FullCalendarComponent.class, JQUERY_UI_SCRIPT_NAME));
+        add(JavascriptPackageResource.getHeaderContribution(FullCalendarComponent.class, FC_SCRIPT_NAME));
+        add(JavascriptPackageResource.getHeaderContribution(FullCalendarComponent.class, CUSTOM_JS_NAME));
+        // Static CSSs
+        add(CSSPackageResource.getHeaderContribution(FullCalendarComponent.class, FX_CSS_NAME));
+        this.setOutputMarkupId(true);
         // Behaviour for Event Management (Drag / Drop / Click ...)
         AjaxEventBehavior eventManagerAjaxBehaviour = new AjaxEventBehavior("EventBehavior") {
 
@@ -113,18 +121,9 @@ public class FullCalendarComponent extends LabeledWebMarkupContainer {
         originalTemplateMap.put("markupId", getMarkupId());
         originalTemplateMap.put("eventBehaviourUrl", eventManagerAjaxBehaviour.getCallbackUrl(true).toString());
         originalTemplateMap.put("getListBehaviourUrl", eventListAjaxBehaviour.getCallbackUrl(true).toString());
-
         // Dynamic JavaScript
         add(TextTemplateHeaderContributor.forJavaScript(FullCalendarComponent.class,
                 CUSTOM_JS_TEMPLATE_NAME, Util.getTemplateKeys(originalTemplateMap)));
-        // Static JavaScripts
-        add(JavascriptPackageResource.getHeaderContribution(FullCalendarComponent.class, JQUERY_SCRIPT_NAME));
-        add(JavascriptPackageResource.getHeaderContribution(FullCalendarComponent.class, JQUERY_UI_SCRIPT_NAME));
-        add(JavascriptPackageResource.getHeaderContribution(FullCalendarComponent.class, FC_SCRIPT_NAME));
-        add(JavascriptPackageResource.getHeaderContribution(FullCalendarComponent.class, CUSTOM_JS_NAME));
-        // Static CSSs
-        add(CSSPackageResource.getHeaderContribution(FullCalendarComponent.class, FX_CSS_NAME));
-        this.setOutputMarkupId(true);
     }
 
     /*

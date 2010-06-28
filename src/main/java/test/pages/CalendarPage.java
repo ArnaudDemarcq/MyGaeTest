@@ -30,7 +30,7 @@ public class CalendarPage extends PocMainPage {
             @Override
             public void onEventClick(EventBean currentEventBean) {
                 logger.error("We are in the End User  Implementation !");
-             //   logger.error("ID : <" + currentEventBean.getId() + ">");
+                //   logger.error("ID : <" + currentEventBean.getId() + ">");
                 logger.error("TITLE : <" + currentEventBean.getTitle() + ">");
             }
 
@@ -40,6 +40,26 @@ public class CalendarPage extends PocMainPage {
 
                 returnList.add(getEventBean("First Event Ever !", new Date()));
                 returnList.add(getEventBean("Second Event Ever !", new Date()));
+
+                return returnList;
+            }
+        };
+
+        FullCalendarComponent calendarTwo = new FullCalendarComponent(this, "calendarTwo") {
+
+            @Override
+            public void onEventClick(EventBean currentEventBean) {
+                logger.error("We are in the End User  Implementation !");
+                //   logger.error("ID : <" + currentEventBean.getId() + ">");
+                logger.error("TITLE : <" + currentEventBean.getTitle() + ">");
+            }
+
+            @Override
+            public List<EventBean> getEventList(Date startDate, Date endDate) {
+                List<EventBean> returnList = new ArrayList<EventBean>();
+
+                returnList.add(getEventBean(" Another Event ....", new Date()));
+                returnList.add(getEventBean(" And so on", new Date()));
 
                 return returnList;
             }

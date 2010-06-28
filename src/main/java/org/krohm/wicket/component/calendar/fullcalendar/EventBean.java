@@ -87,9 +87,11 @@ public class EventBean {
             String value = dataMap.get(key);
             logger.error("Found key :<" + key + "> With value :<" + value + ">");
         }
-        // Mandatory Fields :
+        // Mandatory Fields : start and title
         this.setTitle(dataMap.get(EVENT_TITLE_KEY));
-        // Optional Fields :
+        String startString = dataMap.get(EVENT_START_KEY);
+        Long startLong = Long.parseLong(startString);
+        // Optional Fields : id, url, end, allDay,
 
         /*
         if (dataMap.get(EVENT_ID_KEY) != null) {
@@ -97,13 +99,9 @@ public class EventBean {
         }/**/
 
         // Dates
-        String startString = dataMap.get(EVENT_START_KEY);
-        Long startLong = Long.parseLong(startString);
+
         Date startDate = new Date(startLong);
         logger.error("=>>>>>>>>>>>>>>>" + startDate);
-
-
-
     }
     /*
      * Json Serialization
