@@ -101,9 +101,10 @@ public class FullCalendarComponent extends LabeledWebMarkupContainer {
 
                     @Override
                     public void respond(RequestCycle requestCycle) {
-                        // Add JSON script to the response
                         String eventJson = Util.getEventListJson(getEventList(startDate, endDate)).toString();
-                        logger.error(eventJson);
+                        if (logger.isDebugEnabled()) {
+                            logger.debug(eventJson);
+                        }
                         requestCycle.getResponse().write(eventJson);
                     }
 
