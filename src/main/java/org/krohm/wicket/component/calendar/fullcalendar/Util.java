@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.collections.MiniMap;
@@ -83,8 +84,17 @@ public class Util {
     returnString +="]";
     return returnString;
     }/**/
-    protected final static JSONArray getEventListJson(List<EventBean> eventList) {
+    protected final static JSONArray getEventListJson_old(List<EventBean> eventList) {
         JSONArray jsonArray = JSONArray.fromCollection(eventList);
+        return jsonArray;
+    }/**/
+
+
+    protected final static JSONArray getEventListJson(List<EventBean> eventList) {
+        JSONArray jsonArray = new JSONArray();
+        for (EventBean currentEvent : eventList) {
+            jsonArray.put(JSONObject.fromMap(currentEvent.getJsonData()));
+        }
         return jsonArray;
     }/**/
 

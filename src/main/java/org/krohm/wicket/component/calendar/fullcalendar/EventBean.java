@@ -5,8 +5,8 @@
 package org.krohm.wicket.component.calendar.fullcalendar;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
-import net.sf.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,9 +47,11 @@ public class EventBean {
         // Mandatory Fields :
         this.setTitle(dataMap.get(EVENT_TITLE_KEY));
         // Optional Fields :
+
+        /*
         if (dataMap.get(EVENT_ID_KEY) != null) {
-            this.setId(dataMap.get(EVENT_ID_KEY));
-        }
+        this.setId(dataMap.get(EVENT_ID_KEY));
+        }/**/
 
         // Dates
         String startString = dataMap.get(EVENT_START_KEY);
@@ -85,6 +87,18 @@ public class EventBean {
         this.id = id;
     }
 
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }/**/
+
+    /*
+     * Json Serialization
+     */
+
     public Date getStart() {
         return start;
     }
@@ -101,31 +115,27 @@ public class EventBean {
         this.title = title;
     }
 
-    public String getUrl() {
-        return url;
+    protected Map<String, Object> getJsonData() {
+        Map<String, Object> returnMap = new HashMap<String, Object>();
+        returnMap.put("title", getTitle());
+        returnMap.put("start", (getStart().getTime() /1000 ));//1278799200
+        logger.error("" + (getStart().getTime() /1000 ));
+        logger.error("" + 1277739109);
+        return returnMap;
     }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    /*
-     * Json Serialization
-     */
-
     /*
     public final String toJson() {
-        JSONObject jsonObject = JSONObject.fromBean(this);
-        return jsonObject.toString();
-      //  return "{\n" + jsonContent() + "\n}";
+    JSONObject jsonObject = JSONObject.fromBean(this);
+    return jsonObject.toString();
+    //  return "{\n" + jsonContent() + "\n}";
     }
 
     // todo : change to StringWriter
     
     protected String jsonContent() {
-        String returnString = "";
-        returnString += "\"title\": '" + getTitle() + "',\n";
-        returnString += "\"start\": 1278799200";
-        return returnString;
+    String returnString = "";
+    returnString += "\"title\": '" + getTitle() + "',\n";
+    returnString += "\"start\": 1278799200";
+    return returnString;
     } //&start=1275170400&end=1278799200 /**/
 }

@@ -30,7 +30,7 @@ public class CalendarPage extends PocMainPage {
             @Override
             public void onEventClick(EventBean currentEventBean) {
                 logger.error("We are in the End User  Implementation !");
-                logger.error("ID : <" + currentEventBean.getId() + ">");
+             //   logger.error("ID : <" + currentEventBean.getId() + ">");
                 logger.error("TITLE : <" + currentEventBean.getTitle() + ">");
             }
 
