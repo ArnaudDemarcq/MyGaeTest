@@ -149,16 +149,12 @@
             <artifactId>JfcComponents</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
-        <!-- Dependencies for Json -->
+        <!-- Dependencies for Full Calendar Component -->
         <dependency>
-            <groupId>net.sf.json-lib</groupId>
-            <artifactId>json-lib</artifactId>
-            <version>1.0</version>
-            <classifier>jdk15</classifier>
+            <groupId>org.krohm.wicket</groupId>
+            <artifactId>FullCalendarComponent</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
         </dependency>  
-
-
-
     </dependencies>
     <repositories>
         <!-- SPRING Repositories -->

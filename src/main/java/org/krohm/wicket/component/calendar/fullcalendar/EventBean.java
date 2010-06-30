@@ -18,15 +18,18 @@ public class EventBean {
     // Constants
     private static final String EVENT_ROOT = "Event_";
     private static final String EVENT_ID_KEY = EVENT_ROOT + "id";
+    private static final String EVENT_URL_KEY = EVENT_ROOT + "url";
     private static final String EVENT_TITLE_KEY = EVENT_ROOT + "title";
+    private static final String EVENT_ALLDAY_KEY = EVENT_ROOT + "allDay";
     private static final String EVENT_START_KEY = EVENT_ROOT + "GEN_start";
+    private static final String EVENT_END_KEY = EVENT_ROOT + "GEN_end";
     // variables
-    private String id;
-    private String title;
-    private Boolean allDay;
-    private Date start;
-    private Date end;
-    private String url;
+    private String id = null;
+    private String title = null;
+    private Boolean allDay = null;
+    private Date start = null;
+    private Date end = null;
+    private String url = null;
 
     public EventBean() {
     }
@@ -83,25 +86,28 @@ public class EventBean {
      * Population from DataMap
      */
     public void populateFromMap(Map<String, String> dataMap) {
-        for (String key : dataMap.keySet()) {
-            String value = dataMap.get(key);
-            logger.error("Found key :<" + key + "> With value :<" + value + ">");
+        // A few Input Fields Logging
+        if (logger.isDebugEnabled()) {
+            for (String key : dataMap.keySet()) {
+                String value = dataMap.get(key);
+                logger.debug("Found key :<" + key + "> With value :<" + value + ">");
+            }
         }
         // Mandatory Fields : start and title
         this.setTitle(dataMap.get(EVENT_TITLE_KEY));
         String startString = dataMap.get(EVENT_START_KEY);
         Long startLong = Long.parseLong(startString);
-        // Optional Fields : id, url, end, allDay,
-
-        /*
-        if (dataMap.get(EVENT_ID_KEY) != null) {
+        setStart(new Date(startLong));
+        // Optional Fields
         this.setId(dataMap.get(EVENT_ID_KEY));
-        }/**/
-
-        // Dates
-
-        Date startDate = new Date(startLong);
-        logger.error("=>>>>>>>>>>>>>>>" + startDate);
+        this.setUrl(dataMap.get(EVENT_URL_KEY));
+        if (dataMap.get(EVENT_ALLDAY_KEY) != null) {
+            this.setAllDay(dataMap.get(EVENT_ALLDAY_KEY).toLowerCase().equals("true"));
+        }
+        if (dataMap.get(EVENT_END_KEY) != null) {
+            this.setEnd(new Date(Long.parseLong(dataMap.get(EVENT_END_KEY))));
+        }
+        logger.error("=>>>>>>>>>>>>>>>" + getStart());
     }
     /*
      * Json Serialization
@@ -109,8 +115,27 @@ public class EventBean {
 
     protected Map<String, Object> jsonData() {
         Map<String, Object> returnMap = new HashMap<String, Object>();
+        // Mandatory Data
         returnMap.put("title", getTitle());
-        returnMap.put("start", (getStart().getTime() / 1000));//1278799200
+        returnMap.put("start", (getStart().getTime() / 1000));
+        // Optional Data
+        if (id != null) {
+            returnMap.put("id", getId());
+        }
+        if (allDay != null) {
+            returnMap.put("allDay", getAllDay().booleanValue());
+        }
+        if (end != null) {
+            returnMap.put("end", (getEnd().getTime() / 1000));
+        }
+        if (url != null) {
+            returnMap.put("url", getUrl());
+        }
         return returnMap;
+    }
+
+    @Override
+    public final String toString() {
+        return jsonData().toString();
     }
 }

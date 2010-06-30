@@ -49,9 +49,12 @@ public class CalendarPage extends PocMainPage {
 
             @Override
             public void onEventClick(EventBean currentEventBean) {
-                logger.error("We are in the End User  Implementation !");
-                //   logger.error("ID : <" + currentEventBean.getId() + ">");
-                logger.error("TITLE : <" + currentEventBean.getTitle() + ">");
+                logger.error("#################" + currentEventBean.toString());
+            }
+
+            @Override
+            public void onEventDrop(EventBean currentEventBean, Integer dayDelta, Integer minuteDelta, Boolean allDay) {
+                logger.error("#################" + currentEventBean.toString());
             }
 
             @Override
@@ -60,8 +63,20 @@ public class CalendarPage extends PocMainPage {
 
                 returnList.add(getEventBean(" Another Event ....", new Date()));
                 returnList.add(getEventBean(" And so on", new Date()));
+                EventBean testBean = new EventBean();
+                testBean.setTitle("This is a test Event");
+                long currentTime = (new Date()).getTime();
+                testBean.setAllDay(false);
+                testBean.setStart(new Date(currentTime));
+                testBean.setEnd(new Date(currentTime + 3600000));
+                testBean.setUrl("http://www.google.fr");
+                testBean.setId("PikaId_987");
 
+                logger.error("===> " + currentTime + "======> " + testBean.getStart());
+                logger.error("===> " + currentTime + "======> " + testBean.getEnd());
+                returnList.add(testBean);
                 return returnList;
+
             }
         };
 

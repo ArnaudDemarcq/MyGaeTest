@@ -11,6 +11,9 @@ function callWicketEventPost(wicketUrl, body, wicketEventType){
 function getEventArguments(event){
     currentEventString = jsonToArgs(event,"Event");
     currentEventString += "&Event_GEN_start=" + event.start.getTime();
+    if (event.end != null){
+        currentEventString += "&Event_GEN_end=" + event.end.getTime();
+    }
     return currentEventString;
 }
 
