@@ -36,10 +36,11 @@
         <param-name>contextConfigLocation</param-name>
         <param-value>
             classpath:springConfiguration.xml
-            classpath:springJdbc.xml
             classpath:springSecuritySettings.xml
+            classpath:springJdbc.xml
         </param-value>
     </context-param>
+
 
     <listener>
         <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>

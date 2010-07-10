@@ -4,6 +4,7 @@
  */
 package test.Pannels;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
@@ -11,7 +12,6 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.PropertyModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import test.Index;
@@ -20,6 +20,7 @@ import test.pages.DaoTestPage;
 import test.pages.JfcTestPage;
 import test.pages.RaphaelPage;
 import test.pages.WicketTestPage;
+import test.pages.DroolsTestPage;
 
 /**
  *
@@ -58,10 +59,11 @@ public class PocListPanel extends Panel {
         returnList.add(new ClassLinkLabel(WicketTestPage.class, "WicketLink"));
         returnList.add(new ClassLinkLabel(CalendarPage.class, "CalendarLink"));
         returnList.add(new ClassLinkLabel(RaphaelPage.class, "RaphaelLink"));
+                returnList.add(new ClassLinkLabel(DroolsTestPage.class, "DroolsLink"));
         return returnList;
     }
 
-    private class ClassLinkLabel {
+    private class ClassLinkLabel implements Serializable {
 
         private Class linkClass;
         private String linkLabel;

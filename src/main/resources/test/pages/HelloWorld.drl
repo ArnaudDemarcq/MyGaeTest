@@ -1,0 +1,9 @@
+rule "Hello World"
+      dialect "mvel"
+  when
+      m : beans.Message( status == beans.Message.HELLO, message : message )
+  then
+      System.out.println( message );
+      modify ( m ) { message = "Goodbyte cruel world",
+                     status = beans.Message.GOODBYE };
+end
