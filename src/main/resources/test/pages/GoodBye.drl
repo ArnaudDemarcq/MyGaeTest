@@ -1,6 +1,7 @@
 rule "Good Bye"
       salience 20
       dialect "mvel"
+      lock-on-active 
    when
       m : beans.Message( status == beans.Message.GOODBYE, message : message )
   then
