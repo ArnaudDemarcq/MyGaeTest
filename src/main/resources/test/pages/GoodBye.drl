@@ -1,0 +1,13 @@
+rule "Good Bye"
+      salience 20
+      dialect "mvel"
+   when
+      m : beans.Message( status == beans.Message.GOODBYE, message : message )
+  then
+      System.out.println( "In Da JAVA stuff" );
+      System.out.println( message);
+      modify ( m ) { message = "Back on track !",
+                     status = beans.Message.HELLO };
+
+
+end

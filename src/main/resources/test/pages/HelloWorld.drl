@@ -1,8 +1,11 @@
 rule "Hello World"
+      salience 15
       dialect "mvel"
+      lock-on-active 
   when
       m : beans.Message( status == beans.Message.HELLO, message : message )
   then
+      System.out.println( "In Da MVEL stuff" );
       System.out.println( message );
       modify ( m ) { message = "Goodbyte cruel world",
                      status = beans.Message.GOODBYE };

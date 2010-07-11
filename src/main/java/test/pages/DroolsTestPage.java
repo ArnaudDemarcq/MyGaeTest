@@ -13,13 +13,14 @@ import org.drools.KnowledgeBaseFactory;
 import org.drools.builder.KnowledgeBuilder;
 import org.drools.builder.KnowledgeBuilderFactory;
 import org.drools.builder.ResourceType;
+import org.drools.conflict.FifoConflictResolver;
+import org.drools.conflict.SalienceConflictResolver;
 import org.drools.definition.KnowledgePackage;
 import org.drools.event.rule.DebugAgendaEventListener;
 import org.drools.event.rule.DebugWorkingMemoryEventListener;
 import org.drools.io.ResourceFactory;
-import org.drools.logger.KnowledgeRuntimeLogger;
-import org.drools.logger.KnowledgeRuntimeLoggerFactory;
 import org.drools.runtime.StatefulKnowledgeSession;
+import org.drools.spi.ConflictResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,6 +32,9 @@ public class DroolsTestPage extends PocMainPage {
 
     final KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
     private static final Logger logger = LoggerFactory.getLogger(DroolsTestPage.class);
+    private ConflictResolver[] conflictResolvers = new ConflictResolver[]{
+        SalienceConflictResolver.getInstance(),
+        FifoConflictResolver.getInstance()};
 
     public DroolsTestPage(PageParameters parameters) {
         super(parameters);
@@ -38,10 +42,13 @@ public class DroolsTestPage extends PocMainPage {
         // tries ... Something
         kbuilder.add(ResourceFactory.newClassPathResource("HelloWorld.drl",
                 DroolsTestPage.class), ResourceType.DRL);
+        kbuilder.add(ResourceFactory.newClassPathResource("GoodBye.drl",
+                DroolsTestPage.class), ResourceType.DRL);
+        
 
-        //if (kbuilder.hasErrors()) {
-        //    logger.error(kbuilder.getErrors().toString());
-        //}
+        if (kbuilder.hasErrors()) {
+            logger.error(kbuilder.getErrors().toString());
+        }
 
 
         // get the compiled packages (which are serializable)
@@ -58,7 +65,8 @@ public class DroolsTestPage extends PocMainPage {
         ksession.addEventListener(new DebugAgendaEventListener());
         ksession.addEventListener(new DebugWorkingMemoryEventListener());
 
-       
+        
+
         add(new Label("message", "Drools Test Page"));
 
         final Message message = new Message();
@@ -67,7 +75,7 @@ public class DroolsTestPage extends PocMainPage {
         ksession.insert(message);
 
         ksession.fireAllRules();
-        
+
 
         logger.error("BLOA !");
         logger.error(message.getMessage());
@@ -76,6 +84,4 @@ public class DroolsTestPage extends PocMainPage {
 
         ksession.dispose();
     }
-
-
 }
