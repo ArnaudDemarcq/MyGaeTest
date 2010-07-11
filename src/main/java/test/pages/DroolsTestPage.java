@@ -5,26 +5,28 @@
 package test.pages;
 
 import beans.Message;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.io.StringReader;
 import java.util.Collection;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.basic.Label;
 import org.drools.KnowledgeBase;
 import org.drools.KnowledgeBaseFactory;
+import org.drools.RuleBase;
+import org.drools.RuleBaseConfiguration;
+import org.drools.RuleBaseFactory;
 import org.drools.builder.KnowledgeBuilder;
 import org.drools.builder.KnowledgeBuilderFactory;
 import org.drools.builder.ResourceType;
-import org.drools.conflict.FifoConflictResolver;
-import org.drools.conflict.SalienceConflictResolver;
+import org.drools.compiler.PackageBuilder;
 import org.drools.decisiontable.InputType;
 import org.drools.decisiontable.SpreadsheetCompiler;
 import org.drools.definition.KnowledgePackage;
 import org.drools.event.rule.DebugAgendaEventListener;
 import org.drools.event.rule.DebugWorkingMemoryEventListener;
 import org.drools.io.ResourceFactory;
+import org.drools.rule.Package;
 import org.drools.runtime.StatefulKnowledgeSession;
-import org.drools.spi.ConflictResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,34 +36,44 @@ import org.slf4j.LoggerFactory;
  */
 public class DroolsTestPage extends PocMainPage {
 
-    //private static  final String testExcelFileName = "test/pages/ExampleMortgageLoan.xls";
-    private static final String testExcelFileName = "ExampleMortgageLoan.xls";
+    private static final String testExcelFileNameSample = "test/pages/DecisionTablesSample.xls";
+    private static final String testExcelFileNameMortgage = "test/pages/ExampleMortgageLoan.xls";
+    private static final String testExcelMessage = "test/pages/ExampleMessage.xls";
     final KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
     private static final Logger logger = LoggerFactory.getLogger(DroolsTestPage.class);
-    private ConflictResolver[] conflictResolvers = new ConflictResolver[]{
-        SalienceConflictResolver.getInstance(),
-        FifoConflictResolver.getInstance()};
-    private SpreadsheetCompiler compiler = new SpreadsheetCompiler();
 
     public DroolsTestPage(PageParameters parameters) throws Exception {
         super(parameters);
-        // TEST File Compilation
 
-        String tmpString = DroolsTestPage.class.getResource(testExcelFileName).toString();
-        tmpString = "C:/Users/arnaud/GaeTest/MyGaeTest/MyGaeTest/target/classes/test/pages/ExampleMortgageLoan.xls";
-        tmpString = "C:/Users/arnaud/GaeTest/MyGaeTest/MyGaeTest/target/classes/test/pages/DecisionTablesSample.xls";
-        FileInputStream fis = new FileInputStream(tmpString);
-        String drl = compiler.compile(fis, InputType.XLS);
-        fis.close();
-        logger.error(drl);
+        InputStream xlsStream = DroolsTestPage.class.getClassLoader().
+                getResourceAsStream(testExcelMessage);
+        SpreadsheetCompiler compiler = new SpreadsheetCompiler();
+        String testDrlString = compiler.compile(xlsStream, InputType.XLS);
+        logger.error(testDrlString);
+
+        // hop ?
+        /*
+        PackageBuilder builder = new PackageBuilder();
+        builder.addPackageFromDrl(new StringReader(testDrlString));
+        Package pkg = builder.getPackage();
+        RuleBase ruleBase = RuleBaseFactory.newRuleBase();
+        ruleBase.addPackage(pkg); /**/
+
+        // plop
+        kbuilder.add(
+                ResourceFactory.newReaderResource(new StringReader(testDrlString)),
+                ResourceType.DRL);
 
 
 
         // tries ... Something
-        kbuilder.add(ResourceFactory.newClassPathResource("HelloWorld.drl",
-                DroolsTestPage.class), ResourceType.DRL);
-        kbuilder.add(ResourceFactory.newClassPathResource("GoodBye.drl",
-                DroolsTestPage.class), ResourceType.DRL);
+        kbuilder.add(
+                ResourceFactory.newClassPathResource("HelloWorld.drl", DroolsTestPage.class),
+                ResourceType.DRL);
+        kbuilder.add(
+                ResourceFactory.newClassPathResource("GoodBye.drl", DroolsTestPage.class),
+                ResourceType.DRL);
+
 
 
 
@@ -75,7 +87,13 @@ public class DroolsTestPage extends PocMainPage {
 
         // add the packages to a knowledgebase (deploy the knowledge packages).
         final KnowledgeBase kbase = KnowledgeBaseFactory.newKnowledgeBase();
+
+
         kbase.addKnowledgePackages(pkgs);
+
+
+
+
 
         final StatefulKnowledgeSession ksession = kbase.newStatefulKnowledgeSession();
 
