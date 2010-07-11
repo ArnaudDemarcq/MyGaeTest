@@ -12,20 +12,15 @@ import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.basic.Label;
 import org.drools.KnowledgeBase;
 import org.drools.KnowledgeBaseFactory;
-import org.drools.RuleBase;
-import org.drools.RuleBaseConfiguration;
-import org.drools.RuleBaseFactory;
 import org.drools.builder.KnowledgeBuilder;
 import org.drools.builder.KnowledgeBuilderFactory;
 import org.drools.builder.ResourceType;
-import org.drools.compiler.PackageBuilder;
 import org.drools.decisiontable.InputType;
 import org.drools.decisiontable.SpreadsheetCompiler;
 import org.drools.definition.KnowledgePackage;
 import org.drools.event.rule.DebugAgendaEventListener;
 import org.drools.event.rule.DebugWorkingMemoryEventListener;
 import org.drools.io.ResourceFactory;
-import org.drools.rule.Package;
 import org.drools.runtime.StatefulKnowledgeSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,51 +31,41 @@ import org.slf4j.LoggerFactory;
  */
 public class DroolsTestPage extends PocMainPage {
 
-    private static final String testExcelFileNameSample = "test/pages/DecisionTablesSample.xls";
-    private static final String testExcelFileNameMortgage = "test/pages/ExampleMortgageLoan.xls";
-    private static final String testExcelMessage = "test/pages/ExampleMessage.xls";
+    private static final String testExcelFileNameSample = "DecisionTablesSample.xls";
+    private static final String testExcelFileNameMortgage = "ExampleMortgageLoan.xls";
+    private static final String testExcelMessage = "ExampleMessage.xls";
+    private static final String helloDRL = "HelloWorld.drl";
+    private static final String byeDRL = "GoodBye.drl";
     final KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
     private static final Logger logger = LoggerFactory.getLogger(DroolsTestPage.class);
 
+    // tries ... Something
     public DroolsTestPage(PageParameters parameters) throws Exception {
         super(parameters);
 
-        InputStream xlsStream = DroolsTestPage.class.getClassLoader().
-                getResourceAsStream(testExcelMessage);
+        // Gets DRL From XLS
+        InputStream xlsStream = ResourceFactory.newClassPathResource(
+                testExcelMessage, DroolsTestPage.class).getInputStream();
         SpreadsheetCompiler compiler = new SpreadsheetCompiler();
         String testDrlString = compiler.compile(xlsStream, InputType.XLS);
         logger.error(testDrlString);
 
-        // hop ?
-        /*
-        PackageBuilder builder = new PackageBuilder();
-        builder.addPackageFromDrl(new StringReader(testDrlString));
-        Package pkg = builder.getPackage();
-        RuleBase ruleBase = RuleBaseFactory.newRuleBase();
-        ruleBase.addPackage(pkg); /**/
-
-        // plop
+        // Adds rules from the XLS
         kbuilder.add(
                 ResourceFactory.newReaderResource(new StringReader(testDrlString)),
                 ResourceType.DRL);
 
-
-
-        // tries ... Something
+        // Adds rules from static files
         kbuilder.add(
-                ResourceFactory.newClassPathResource("HelloWorld.drl", DroolsTestPage.class),
+                ResourceFactory.newClassPathResource(helloDRL, DroolsTestPage.class),
                 ResourceType.DRL);
         kbuilder.add(
-                ResourceFactory.newClassPathResource("GoodBye.drl", DroolsTestPage.class),
+                ResourceFactory.newClassPathResource(byeDRL, DroolsTestPage.class),
                 ResourceType.DRL);
-
-
-
 
         if (kbuilder.hasErrors()) {
             logger.error(kbuilder.getErrors().toString());
         }
-
 
         // get the compiled packages (which are serializable)
         final Collection<KnowledgePackage> pkgs = kbuilder.getKnowledgePackages();
