@@ -8,6 +8,7 @@ import beans.Message;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.util.Collection;
+import java.util.Date;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.basic.Label;
 import org.drools.KnowledgeBase;
@@ -43,12 +44,18 @@ public class DroolsTestPage extends PocMainPage {
     public DroolsTestPage(PageParameters parameters) throws Exception {
         super(parameters);
 
+        long initTime = new Date().getTime();
+
+        logger.error("BEFORE INIT !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + (new Date()).getTime());
         // Gets DRL From XLS
         InputStream xlsStream = ResourceFactory.newClassPathResource(
                 testExcelMessage, DroolsTestPage.class).getInputStream();
         SpreadsheetCompiler compiler = new SpreadsheetCompiler();
         String testDrlString = compiler.compile(xlsStream, InputType.XLS);
         logger.error(testDrlString);
+
+        long time1 = new Date().getTime();
+        logger.error("XLS compilation took :<" + (time1 - initTime) + "> ms");
 
         // Adds rules from the XLS
         kbuilder.add(
@@ -89,15 +96,21 @@ public class DroolsTestPage extends PocMainPage {
 
 
 
-        add(new Label("message", "Drools Test Page"));
 
+
+        logger.error("AFTER INIT !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + (new Date()).getTime());
+
+        long time2 = new Date().getTime();
+        logger.error("ksession preparation took :<" + (time2 - time1) + "> ms");
         final Message message = new Message();
         message.setMessage("Hello World");
         message.setStatus(Message.HELLO);
         ksession.insert(message);
 
         ksession.fireAllRules();
-
+        long time3 = new Date().getTime();
+        logger.error("Rules Execution took :<" + (time3 - time2) + "> ms");
+        logger.error("AFTER EXEC !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + (new Date()).getTime());
 
         logger.error("BLOA !");
         logger.error(message.getMessage());
@@ -105,5 +118,8 @@ public class DroolsTestPage extends PocMainPage {
 
 
         ksession.dispose();
+
+
+        add(new Label("message", "Drools Test Page"));
     }
 }
