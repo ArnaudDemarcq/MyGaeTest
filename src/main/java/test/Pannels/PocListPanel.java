@@ -21,6 +21,7 @@ import test.pages.JfcTestPage;
 import test.pages.RaphaelPage;
 import test.pages.WicketTestPage;
 import test.pages.DroolsTestPage;
+import test.pages.PocTestPage;
 
 /**
  *
@@ -59,7 +60,8 @@ public class PocListPanel extends Panel {
         returnList.add(new ClassLinkLabel(WicketTestPage.class, "WicketLink"));
         returnList.add(new ClassLinkLabel(CalendarPage.class, "CalendarLink"));
         returnList.add(new ClassLinkLabel(RaphaelPage.class, "RaphaelLink"));
-                returnList.add(new ClassLinkLabel(DroolsTestPage.class, "DroolsLink"));
+        returnList.add(new ClassLinkLabel(DroolsTestPage.class, "DroolsLink"));
+        returnList.add(new ClassLinkLabel(PocTestPage.class, "PocTestLink"));
         return returnList;
     }
 

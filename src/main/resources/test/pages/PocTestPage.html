@@ -1,0 +1,23 @@
+<html>
+    <head>
+        <title>Wicket Hello World</title>
+    <wicket:head>
+        <style>
+            div.my-tree div.wicket-tree-table-body {
+                height: 20em;
+                overflow: auto;
+            }
+        </style>
+    </wicket:head>
+</head>
+<body>
+<wicket:extend>
+    <h1>
+        <span wicket:id="message">[1]this message will be here, replace later</span>
+    </h1>
+    <div wicket:id="testTreeTable" class="my-tree">
+    </div>
+</wicket:extend>
+</body>
+</html>
+
