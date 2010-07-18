@@ -1,0 +1,30 @@
+import org.krohm.milleborne.engineimpl.InternalActionExecutionContext;
+import org.krohm.milleborne.actions.useractions.PlayCardAction;
+import org.slf4j.Logger;
+import org.krohm.milleborne.util.DrlUtil;
+
+
+rule "Input Log"
+      salience 65000
+      dialect "java"
+  when
+      context : InternalActionExecutionContext (userAction : userAction)
+  then
+       Logger logger = DrlUtil.getLogger();
+       logger.error("Hop !");
+      System.out.println( "First Nimp Ever !" + this );
+end
+
+
+rule "Hello World"
+      salience 15
+      dialect "java"
+      lock-on-active
+  when
+      context : InternalActionExecutionContext (userAction : userAction)
+      eval(userAction instanceof PlayCardAction)
+  then
+      PlayCardAction currentPlayCardAction = (PlayCardAction) userAction;
+      System.out.println( "First Nimp Ever !" );
+      System.out.println( "First Nimp Ever !" + currentPlayCardAction.toString());
+end

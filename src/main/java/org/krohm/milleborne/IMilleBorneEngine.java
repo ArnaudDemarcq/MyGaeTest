@@ -5,7 +5,6 @@
 package org.krohm.milleborne;
 
 import java.util.List;
-import java.util.Map;
 import org.krohm.milleborne.actions.IUserAction;
 
 /**
@@ -13,6 +12,10 @@ import org.krohm.milleborne.actions.IUserAction;
  * @author arnaud
  */
 public interface IMilleBorneEngine {
+
+    // TODO : Create interfaces for MilleBorneCard and MilleBornePlayer (getters only)
+    // in order to prevent
+    // Modification by front end
 
     public long newGame();
 
@@ -24,7 +27,8 @@ public interface IMilleBorneEngine {
 
     public List<MilleBorneCard> getZoneContent(long gameId, long zoneId, long playerId);
 
-        public List<MilleBornePlayer> getPlayers(long gameId);
+    public List<MilleBornePlayer> getPlayers(long gameId);
+
     /**
      *      OLD
      **/

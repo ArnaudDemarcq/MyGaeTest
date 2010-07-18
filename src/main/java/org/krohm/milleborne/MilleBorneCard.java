@@ -10,18 +10,18 @@ import org.krohm.milleborne.util.UniqueId;
  *
  * @author arnaud
  */
-public class MilleBorneCard {
+public class MilleBorneCard extends MilleBorneObject{
 
     /**
      * Card Information
      */
-    private long uniqueId = UniqueId.getUniqueId();
-    private long timerId = UniqueId.getUniqueId();
     private int type;
+        private int subType;
     private int dist;
     private String name;
     private long controlerId;
     private long zoneId;
+
 
     /**
      * And Corresponding getters /setters
@@ -51,9 +51,6 @@ public class MilleBorneCard {
         this.type = type;
     }
 
-    public long getUniqueId() {
-        return uniqueId;
-    }
 
     public long getControlerId() {
         return controlerId;
@@ -71,12 +68,12 @@ public class MilleBorneCard {
         this.zoneId = zoneId;
     }
 
-    public long getTimerId() {
-        return timerId;
+    public int getSubType() {
+        return subType;
     }
 
-    public void setTimerId(long timerId) {
-        this.timerId = timerId;
+    public void setSubType(int subType) {
+        this.subType = subType;
     }
     
 }

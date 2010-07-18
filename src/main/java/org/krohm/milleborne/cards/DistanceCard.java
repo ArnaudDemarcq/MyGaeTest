@@ -14,7 +14,7 @@ import org.krohm.milleborne.data.CardTypes;
 public class DistanceCard extends MilleBorneCard {
 
     public DistanceCard(int DistanceValue) {
-        this.setType(CardTypes.TYPE_DISTANE);
+        this.setType(CardTypes.TYPE_DISTANCE);
         this.setDist(DistanceValue);
         this.setName("" + DistanceValue +" Bornes");
     }

@@ -4,12 +4,7 @@
  */
 package test.Pannels;
 
-import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.FormComponent;
-import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.krohm.milleborne.IMilleBorneEngine;
 import org.krohm.milleborne.actions.useractions.CoupFourreAction;
@@ -45,41 +40,16 @@ public class CardActionPanel extends Panel {
         };
         add(currentForm);
 
-
-        //currentForm.add(new Label("testLabel", "Gni !" + gameId + "-" + cardTimerId));
-        currentForm.add(new Button("PlayButton") {
-
-            @Override
-            public void onSubmit() {
-                logger.error("Attempting to play card <" + cardTimerId + "> of game <" + gameId + ">");
-                PlayCardAction currentAction = new PlayCardAction();
-
-                mbe.executeAction(gameId, currentAction);
+        // Define Actions
+        PlayCardAction targetPlayCardAction = new PlayCardAction();
+        DiscardAction targetDiscardAction = new DiscardAction();
+        CoupFourreAction targetCoupFourreAction = new CoupFourreAction();
 
 
-            }
-        });
-
-        currentForm.add(new Button("DiscardButton") {
-
-            @Override
-            public void onSubmit() {
-                logger.error("Attempting to discard card <" + cardTimerId + "> of game <" + gameId + ">");
-                DiscardAction currentAction = new DiscardAction();
-
-                mbe.executeAction(gameId, currentAction);
-            }
-        });
-
-        currentForm.add(new Button("CoupFourreButton") {
-
-            @Override
-            public void onSubmit() {
-                logger.error("Attempting to Coup Fourre card <" + cardTimerId + "> of game <" + gameId + ">");
-                CoupFourreAction currentAction = new CoupFourreAction();
-
-                mbe.executeAction(gameId, currentAction);
-            }
-        });
+        // add Buttons
+        currentForm.add(new UserActionButton("PlayButton", mbe, gameId, targetPlayCardAction));
+        currentForm.add(new UserActionButton("CoupFourreButton", mbe, gameId, targetCoupFourreAction));
+        currentForm.add(new UserActionButton("DiscardButton", mbe, gameId, targetDiscardAction));
     }
+
 }

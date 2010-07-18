@@ -4,13 +4,11 @@
  */
 package test.pages;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.basic.Label;
 import org.krohm.milleborne.IMilleBorneEngine;
-import org.krohm.milleborne.MilleBorneEngine;
+import org.krohm.milleborne.engineimpl.MilleBorneEngine;
 
 import org.apache.wicket.extensions.markup.html.tree.table.ColumnLocation;
 import org.apache.wicket.extensions.markup.html.tree.table.IColumn;
@@ -34,6 +32,8 @@ import org.krohm.milleborne.data.Zones;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.wicket.extensions.markup.html.tree.table.IRenderable;
+import org.apache.wicket.markup.html.form.Form;
+import org.krohm.milleborne.actions.useractions.GameInitAction;
 import test.Pannels.CardActionPanel;
 
 /**
@@ -52,7 +52,17 @@ public class PocTestPage extends PocMainPage {
         add(new Label("message", "Poc Test Page[" +
                 testMilleBorneEngine.getGameList().size() + "]" + gameId));
 
+        Form currentForm = new Form("actionForm") {
 
+            @Override
+            protected void onSubmit() {
+                logger.error("Dont click at the form !");
+            }
+        };
+        add(currentForm);
+
+        GameInitAction tmpInitAction = new GameInitAction();
+        currentForm.add(new test.Pannels.UserActionButton("InitButton", testMilleBorneEngine, gameId, tmpInitAction));
 
 
 
@@ -64,7 +74,9 @@ public class PocTestPage extends PocMainPage {
             new PropertyRenderableColumn(new ColumnLocation(Alignment.MIDDLE, 2,
             Unit.PROPORTIONAL), "TimeStamp", "userObject.timerId"),
             new PropertyRenderableColumn(new ColumnLocation(Alignment.MIDDLE, 3,
-            Unit.PROPORTIONAL), "M3", "userObject.type"),
+            Unit.PROPORTIONAL), "Type", "userObject.type"),
+            new PropertyRenderableColumn(new ColumnLocation(Alignment.MIDDLE, 3,
+            Unit.PROPORTIONAL), "Subtype", "userObject.subType"),
             new testColumn(new ColumnLocation(Alignment.MIDDLE, 8, Unit.PROPORTIONAL), "Actions",
             "userObject.timerId")};
 
@@ -133,6 +145,7 @@ public class PocTestPage extends PocMainPage {
         returnCard.setName(label);
         returnCard.setZoneId(-1);
         returnCard.setTimerId(-1);
+        returnCard.setSubType(-1);
         return returnCard;
     }
 

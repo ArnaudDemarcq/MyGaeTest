@@ -5,7 +5,7 @@
 
 package org.krohm.milleborne.util;
 
-import org.krohm.milleborne.MilleBorneGame;
+import org.krohm.milleborne.engineimpl.MilleBorneGame;
 
 /**
  *

@@ -5,7 +5,7 @@
 
 package org.krohm.milleborne.actions.internalactions;
 
-import org.krohm.milleborne.MilleBorneGame;
+import org.krohm.milleborne.engineimpl.MilleBorneGame;
 import org.krohm.milleborne.actions.IInternalAction;
 
 /**

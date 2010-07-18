@@ -4,15 +4,12 @@
  */
 package org.krohm.milleborne;
 
-import org.krohm.milleborne.util.UniqueId;
-
 /**
  *
  * @author arnaud
  */
-public class MilleBornePlayer {
+public class MilleBornePlayer extends MilleBorneObject {
 
-    private  final long uniqueId = UniqueId.getUniqueId();
     private String name;
 
     public String getName() {
@@ -22,12 +19,4 @@ public class MilleBornePlayer {
     public void setName(String name) {
         this.name = name;
     }
-
-    public long getUniqueId() {
-        return uniqueId;
-    }
-
-
-
-    
 }
