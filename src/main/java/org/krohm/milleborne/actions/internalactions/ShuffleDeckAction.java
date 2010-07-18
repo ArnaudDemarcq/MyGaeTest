@@ -4,16 +4,20 @@
  */
 package org.krohm.milleborne.actions.internalactions;
 
-import org.krohm.milleborne.MilleBorneGame;
 import org.krohm.milleborne.actions.IInternalAction;
+import org.krohm.milleborne.engineimpl.MilleBorneGame;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author arnaud
  */
-public class GameInit implements IInternalAction {
+public class ShuffleDeckAction implements IInternalAction {
+
+    private static final Logger logger = LoggerFactory.getLogger(ShuffleDeckAction.class);
 
     public void execute(MilleBorneGame currentGame) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet.");
+        logger.error("About to Shuffle !");
     }
 }

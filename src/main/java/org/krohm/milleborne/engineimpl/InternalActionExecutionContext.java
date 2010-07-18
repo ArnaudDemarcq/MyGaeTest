@@ -4,11 +4,12 @@
  */
 package org.krohm.milleborne.engineimpl;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedList;
+import java.util.Queue;
 import org.krohm.milleborne.actions.IInternalAction;
 import org.krohm.milleborne.actions.IReturnAction;
 import org.krohm.milleborne.actions.IUserAction;
+import org.krohm.milleborne.data.Steps;
 
 /**
  *
@@ -16,10 +17,12 @@ import org.krohm.milleborne.actions.IUserAction;
  */
 public class InternalActionExecutionContext {
 
+    // some public are fields for Drools to be able to detect modifications
     private MilleBorneGame gameData;
     private IUserAction userAction;
-    private final List<IInternalAction> todoList = new ArrayList<IInternalAction>();
+    private final Queue<IInternalAction> todoList = new LinkedList<IInternalAction>();
     private IReturnAction returnAction;
+    private int currentStep = Steps.STEP_START;
 
     public MilleBorneGame getGameData() {
         return gameData;
@@ -29,7 +32,7 @@ public class InternalActionExecutionContext {
         this.gameData = gameData;
     }
 
-    public List<IInternalAction> getTodoList() {
+    public Queue<IInternalAction> getTodoList() {
         return todoList;
     }
 
@@ -48,4 +51,13 @@ public class InternalActionExecutionContext {
     public void setReturnAction(IReturnAction returnAction) {
         this.returnAction = returnAction;
     }
+
+    public int getCurrentStep() {
+        return currentStep;
+    }
+
+    public void setCurrentStep(int currentStep) {
+        this.currentStep = currentStep;
+    }
+
 }

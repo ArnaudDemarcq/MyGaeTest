@@ -1,0 +1,37 @@
+import org.krohm.milleborne.engineimpl.InternalActionExecutionContext;
+import org.krohm.milleborne.actions.internalactions.*;
+import org.krohm.milleborne.actions.returnactions.*;
+import org.krohm.milleborne.actions.useractions.*;
+import org.krohm.milleborne.data.Steps;
+import org.krohm.milleborne.util.DrlUtil;
+import org.slf4j.Logger;
+
+rule "Start STEP"
+      salience 0
+      dialect "java"
+  when
+      context : InternalActionExecutionContext (currentStep : currentStep == Steps.STEP_START)
+  then
+       context.setCurrentStep(Steps.STEP_INIT);
+       modify ( context ) {}
+end
+
+rule "Start INIT"
+      salience 0
+      dialect "java"
+  when
+      context : InternalActionExecutionContext (currentStep == Steps.STEP_INIT)
+  then
+       context.setCurrentStep(Steps.STEP_USER_ACTION);
+       modify ( context ) {}
+end
+
+rule "Start STEP_USER_ACTION"
+      salience 0
+      dialect "java"
+  when
+      context : InternalActionExecutionContext (currentStep == Steps.STEP_USER_ACTION)
+  then
+       context.setCurrentStep(Steps.STEP_END);
+       modify ( context ) {}
+end

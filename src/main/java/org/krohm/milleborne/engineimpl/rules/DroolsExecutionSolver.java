@@ -27,6 +27,7 @@ public class DroolsExecutionSolver {
 
     private static final Logger logger = LoggerFactory.getLogger(DroolsExecutionSolver.class);
     private static final String testDrl = "HelloWorld.drl";
+    private static final String stepsDefinitionDrl = "StepsDefinition.drl";
     private final KnowledgeBase kbase = KnowledgeBaseFactory.newKnowledgeBase();
 
     public DroolsExecutionSolver() {
@@ -34,9 +35,10 @@ public class DroolsExecutionSolver {
         final KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
 
         // Adds rules from static files to kbase
-        kbuilder.add(
-                ResourceFactory.newClassPathResource(testDrl, DroolsExecutionSolver.class),
-                ResourceType.DRL);
+        kbuilder.add(ResourceFactory.newClassPathResource(testDrl,
+                DroolsExecutionSolver.class), ResourceType.DRL);
+        kbuilder.add(ResourceFactory.newClassPathResource(stepsDefinitionDrl,
+                DroolsExecutionSolver.class), ResourceType.DRL);
         if (kbuilder.hasErrors()) {
             logger.error(kbuilder.getErrors().toString());
         }
