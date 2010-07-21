@@ -57,5 +57,7 @@ public class DroolsExecutionSolver {
         ksession.insert(executionData);
         // Then does ... What ever it does
         ksession.fireAllRules();
+        logger.error("FINAL STEP IS : <" + executionData.getCurrentStep() + ">");
+        logger.error("RESULTING RETURN ACTION : <" + executionData.getReturnAction() + ">");
     }
 }

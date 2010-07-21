@@ -6,7 +6,12 @@ import org.krohm.milleborne.data.Steps;
 import org.krohm.milleborne.util.DrlUtil;
 import org.slf4j.Logger;
 
-rule "Start STEP"
+####
+#
+# START STEP
+#
+####
+rule "START_2_INIT"
       salience 0
       dialect "java"
   when
@@ -16,7 +21,13 @@ rule "Start STEP"
        modify ( context ) {}
 end
 
-rule "Start INIT"
+####
+#
+# INIT STEP
+#
+####¨
+
+rule "INIT_2_STEP_USER_ACTION"
       salience 0
       dialect "java"
   when
@@ -26,12 +37,125 @@ rule "Start INIT"
        modify ( context ) {}
 end
 
-rule "Start STEP_USER_ACTION"
+####
+#
+# USER_ACTION STEP
+#
+####
+
+#
+# Internal Step is used to avoid re-checking other rules of this step and recalculate Other
+# Rules confitions
+#
+rule "STEP_USER_ACTION_2_INTERNAL"
       salience 0
       dialect "java"
   when
       context : InternalActionExecutionContext (currentStep == Steps.STEP_USER_ACTION)
   then
+       context.setCurrentStep(Steps.InternalSteps.INTERNAL_STEP_USER_ACTION);
+       modify ( context ) {}
+end
+
+rule "STEP_USER_ACTION_2_STEP_ERROR"
+      salience 1
+      dialect "java"
+  when
+      context : InternalActionExecutionContext (currentStep == Steps.InternalSteps.INTERNAL_STEP_USER_ACTION, todoList : todoList)
+      eval (todoList.size() < 1)
+  then
+       Logger logger = DrlUtil.getLogger();
+       logger.error("UNKNOWN ACTION");
+#TODO : return  returnAction of type UnknowAction
+       context.setCurrentStep(Steps.STEP_ERROR);
+       modify ( context ) {}
+end
+
+rule "STEP_USER_ACTION_2_STEP_BEFORE_EXEC"
+      salience 0
+      dialect "java"
+  when
+      context : InternalActionExecutionContext (currentStep == Steps.InternalSteps.INTERNAL_STEP_USER_ACTION)
+  then
+       context.setCurrentStep(Steps.STEP_BEFORE_EXEC);
+       modify ( context ) {}
+end
+
+####
+#
+# BEFORE_EXEC STEP
+#
+####
+
+# TODO : add rule to verify if currentAction have been validated or not and jump to error if required
+
+
+rule "STEP_BEFORE_EXEC_2_STEP_EXEC"
+      salience 0
+      dialect "java"
+  when
+      context : InternalActionExecutionContext (currentStep == Steps.STEP_BEFORE_EXEC)
+  then
+       context.setCurrentStep(Steps.STEP_EXEC);
+       modify ( context ) {}
+end
+
+
+####
+#
+# EXEC STEP
+#
+####
+
+rule "STEP_EXEC_2_STEP_AFTER_EXEC"
+      salience 0
+      dialect "java"
+  when
+      context : InternalActionExecutionContext (currentStep == Steps.STEP_EXEC)
+  then
+       context.setCurrentStep(Steps.STEP_AFTER_EXEC);
+       modify ( context ) {}
+end
+
+
+####
+#
+# AFTER_EXEC STEP
+#
+####
+
+rule "STEP_AFTER_EXEC_2_STEP_END"
+      salience 0
+      dialect "java"
+  when
+      context : InternalActionExecutionContext (currentStep == Steps.STEP_AFTER_EXEC)
+  then
        context.setCurrentStep(Steps.STEP_END);
        modify ( context ) {}
 end
+
+####
+#
+# END STEP
+#
+####
+
+# No Rules for END STEP  : this is the end
+
+####
+#
+# END STEP
+#
+####
+
+rule "UNKNOWN_ERROR"
+      salience 0
+      dialect "java"
+  when
+      context : InternalActionExecutionContext (currentStep == Steps.STEP_ERROR, returnAction : returnAction)
+      eval (! ( returnAction instanceof ErrorReturnAction))
+  then
+       context.setReturnAction(new UnknownErrorAction());
+       modify ( context ) {}
+end
+

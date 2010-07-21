@@ -6,11 +6,16 @@ import org.krohm.milleborne.util.DrlUtil;
 import org.krohm.milleborne.actions.internalactions.*;
 import org.krohm.milleborne.data.Steps;
 
+
+#
+# TODO : add InternalAction on Game Actions
+#
+
 rule "Input Log"
       salience 65000
       dialect "java"
   when
-      context : InternalActionExecutionContext (userAction : userAction,currentStep == Steps.STEP_INIT)
+      context : InternalActionExecutionContext (userAction : userAction,currentStep == Steps.STEP_USER_ACTION)
   then
        Logger logger = DrlUtil.getLogger();
        logger.error("Hop !");
@@ -21,7 +26,7 @@ rule "PlayCardAction"
       salience 15
       dialect "java"
   when
-      context : InternalActionExecutionContext (userAction : userAction,currentStep == Steps.STEP_INIT)
+      context : InternalActionExecutionContext (userAction : userAction,currentStep == Steps.STEP_USER_ACTION)
       eval(userAction instanceof PlayCardAction)
   then
       PlayCardAction typedAction = (PlayCardAction) userAction;
@@ -33,7 +38,7 @@ rule "GameInitAction"
       salience 15
       dialect "java"
   when
-      context : InternalActionExecutionContext (userAction : userAction,currentStep == Steps.STEP_INIT)
+      context : InternalActionExecutionContext (userAction : userAction,currentStep == Steps.STEP_USER_ACTION)
       eval(userAction instanceof GameInitAction)
   then
       Logger logger = DrlUtil.getLogger();
