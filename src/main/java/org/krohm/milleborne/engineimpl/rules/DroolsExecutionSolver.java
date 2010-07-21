@@ -5,6 +5,7 @@
 package org.krohm.milleborne.engineimpl.rules;
 
 import java.util.Collection;
+import java.util.Date;
 import org.drools.KnowledgeBase;
 import org.drools.KnowledgeBaseFactory;
 import org.drools.builder.KnowledgeBuilder;
@@ -56,8 +57,11 @@ public class DroolsExecutionSolver {
         //ksession.addEventListener(new DebugWorkingMemoryEventListener());
         ksession.insert(executionData);
         // Then does ... What ever it does
+        long startDate = new Date().getTime();
         ksession.fireAllRules();
+        long endDate = new Date().getTime();
         logger.error("FINAL STEP IS : <" + executionData.getCurrentStep() + ">");
         logger.error("RESULTING RETURN ACTION : <" + executionData.getReturnAction() + ">");
+        logger.error("Rules Execution took : <" + (endDate - startDate) + ">");
     }
 }

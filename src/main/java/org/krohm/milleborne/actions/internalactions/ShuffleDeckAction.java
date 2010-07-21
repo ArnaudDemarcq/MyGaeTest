@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author arnaud
  */
-public class ShuffleDeckAction implements IInternalAction {
+public class ShuffleDeckAction extends AbstractInternalAction {
 
     private static final Logger logger = LoggerFactory.getLogger(ShuffleDeckAction.class);
 

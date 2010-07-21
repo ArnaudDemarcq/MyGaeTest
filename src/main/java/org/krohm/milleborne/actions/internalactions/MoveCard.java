@@ -5,13 +5,12 @@
 package org.krohm.milleborne.actions.internalactions;
 
 import org.krohm.milleborne.engineimpl.MilleBorneGame;
-import org.krohm.milleborne.actions.IInternalAction;
 
 /**
  *
  * @author arnaud
  */
-public class MoveCard implements IInternalAction {
+public class MoveCard extends  AbstractInternalAction {
 
     public void execute(MilleBorneGame currentGame) throws Exception {
         throw new UnsupportedOperationException("Not supported yet.");

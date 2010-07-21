@@ -66,8 +66,7 @@ rule "STEP_USER_ACTION_2_STEP_ERROR"
       eval (todoList.size() < 1)
   then
        Logger logger = DrlUtil.getLogger();
-       logger.error("UNKNOWN ACTION");
-#TODO : return  returnAction of type UnknowAction
+       context.setReturnAction(new InvalidAction());
        context.setCurrentStep(Steps.STEP_ERROR);
        modify ( context ) {}
 end
@@ -88,8 +87,10 @@ end
 #
 ####
 
-# TODO : add rule to verify if currentAction have been validated or not and jump to error if required
-
+#
+# TODO : add rule to verify if currentAction have been validated or not
+# and jump to error / skip if required
+#
 
 rule "STEP_BEFORE_EXEC_2_STEP_EXEC"
       salience 0
@@ -114,21 +115,10 @@ rule "STEP_EXEC_2_INTERNAL"
   when
       context : InternalActionExecutionContext (currentStep == Steps.STEP_EXEC)
   then
-       IInternalAction currentAction = context.getTodoList().poll();
+       IInternalAction currentAction = context.getTodoList().peek();
        Logger logger = DrlUtil.getLogger();
        logger.error("Executing Action : <" + currentAction +">");
        context.setCurrentStep(Steps.InternalSteps.INTERNAL_STEP_EXEC);
-       modify ( context ) {}
-end
-
-rule "STEP_EXEC_2_STEP_BEFORE_EXEC_LOOP"
-      salience 1
-      dialect "java"
-  when
-      context : InternalActionExecutionContext (currentStep == Steps.InternalSteps.INTERNAL_STEP_EXEC, todoList : todoList)
-      eval (todoList.size() > 0)
-  then
-       context.setCurrentStep(Steps.STEP_BEFORE_EXEC);
        modify ( context ) {}
 end
 
@@ -149,11 +139,35 @@ end
 #
 ####
 
-rule "STEP_AFTER_EXEC_2_STEP_END"
+rule "AFTER_EXEC_2_INTERNAL"
       salience 0
       dialect "java"
   when
       context : InternalActionExecutionContext (currentStep == Steps.STEP_AFTER_EXEC)
+  then
+       IInternalAction currentAction = context.getTodoList().poll();
+       Logger logger = DrlUtil.getLogger();
+       logger.error("Removing Action : <" + currentAction +">");
+       context.setCurrentStep(Steps.InternalSteps.INTERNAL_STEP_AFTER_EXEC);
+       modify ( context ) {}
+end
+
+rule "STEP_EXEC_2_STEP_BEFORE_EXEC_LOOP"
+      salience 1
+      dialect "java"
+  when
+      context : InternalActionExecutionContext (currentStep == Steps.InternalSteps.INTERNAL_STEP_AFTER_EXEC, todoList : todoList)
+      eval (todoList.size() > 0)
+  then
+       context.setCurrentStep(Steps.STEP_BEFORE_EXEC);
+       modify ( context ) {}
+end
+
+rule "STEP_AFTER_EXEC_2_STEP_END"
+      salience 0
+      dialect "java"
+  when
+      context : InternalActionExecutionContext (currentStep == Steps.InternalSteps.INTERNAL_STEP_AFTER_EXEC)
   then
        context.setCurrentStep(Steps.STEP_END);
        modify ( context ) {}
@@ -173,6 +187,7 @@ end
 #
 ####
 
+# Replaces any non-error ReturnAction (including null) by default Error Action
 rule "UNKNOWN_ERROR"
       salience 0
       dialect "java"

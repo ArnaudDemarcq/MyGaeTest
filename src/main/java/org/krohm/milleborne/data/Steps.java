@@ -23,6 +23,7 @@ public class Steps {
 
         public static final int INTERNAL_STEP_USER_ACTION = 201; // ERROR
         public static final int INTERNAL_STEP_EXEC = 401; // ERROR
+        public static final int INTERNAL_STEP_AFTER_EXEC = 501; // ERROR
     }
 }
 
