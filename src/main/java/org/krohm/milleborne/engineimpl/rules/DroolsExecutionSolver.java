@@ -52,8 +52,8 @@ public class DroolsExecutionSolver {
 
         // sets up ksession
         final StatefulKnowledgeSession ksession = kbase.newStatefulKnowledgeSession();
-        ksession.addEventListener(new DebugAgendaEventListener());
-        ksession.addEventListener(new DebugWorkingMemoryEventListener());
+        //ksession.addEventListener(new DebugAgendaEventListener());
+        //ksession.addEventListener(new DebugWorkingMemoryEventListener());
         ksession.insert(executionData);
         // Then does ... What ever it does
         ksession.fireAllRules();

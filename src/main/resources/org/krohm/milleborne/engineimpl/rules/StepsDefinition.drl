@@ -2,6 +2,7 @@ import org.krohm.milleborne.engineimpl.InternalActionExecutionContext;
 import org.krohm.milleborne.actions.internalactions.*;
 import org.krohm.milleborne.actions.returnactions.*;
 import org.krohm.milleborne.actions.useractions.*;
+import org.krohm.milleborne.actions.*;
 import org.krohm.milleborne.data.Steps;
 import org.krohm.milleborne.util.DrlUtil;
 import org.slf4j.Logger;
@@ -107,16 +108,40 @@ end
 #
 ####
 
-rule "STEP_EXEC_2_STEP_AFTER_EXEC"
+rule "STEP_EXEC_2_INTERNAL"
       salience 0
       dialect "java"
   when
       context : InternalActionExecutionContext (currentStep == Steps.STEP_EXEC)
   then
-       context.setCurrentStep(Steps.STEP_AFTER_EXEC);
+       IInternalAction currentAction = context.getTodoList().poll();
+       Logger logger = DrlUtil.getLogger();
+       logger.error("Executing Action : <" + currentAction +">");
+       context.setCurrentStep(Steps.InternalSteps.INTERNAL_STEP_EXEC);
        modify ( context ) {}
 end
 
+rule "STEP_EXEC_2_STEP_BEFORE_EXEC_LOOP"
+      salience 1
+      dialect "java"
+  when
+      context : InternalActionExecutionContext (currentStep == Steps.InternalSteps.INTERNAL_STEP_EXEC, todoList : todoList)
+      eval (todoList.size() > 0)
+  then
+       context.setCurrentStep(Steps.STEP_BEFORE_EXEC);
+       modify ( context ) {}
+end
+
+
+rule "STEP_EXEC_2_STEP_AFTER_EXEC"
+      salience 0
+      dialect "java"
+  when
+      context : InternalActionExecutionContext (currentStep == Steps.InternalSteps.INTERNAL_STEP_EXEC)
+  then
+       context.setCurrentStep(Steps.STEP_AFTER_EXEC);
+       modify ( context ) {}
+end
 
 ####
 #

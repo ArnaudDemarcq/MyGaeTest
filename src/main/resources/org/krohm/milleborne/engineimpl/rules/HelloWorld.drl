@@ -45,5 +45,7 @@ rule "GameInitAction"
       GameInitAction typedAction = (GameInitAction) userAction;
       ShuffleDeckAction shuffleAction = new ShuffleDeckAction();
       context.getTodoList().offer(shuffleAction);
+      shuffleAction = new ShuffleDeckAction();
+      context.getTodoList().offer(shuffleAction);
       logger.error("####");
 end
