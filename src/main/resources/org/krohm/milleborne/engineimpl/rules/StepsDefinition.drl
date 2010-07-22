@@ -3,8 +3,8 @@ import org.krohm.milleborne.actions.internalactions.*;
 import org.krohm.milleborne.actions.returnactions.*;
 import org.krohm.milleborne.actions.useractions.*;
 import org.krohm.milleborne.actions.*;
-import org.krohm.milleborne.data.Steps;
-import org.krohm.milleborne.util.DrlUtil;
+import org.krohm.milleborne.data.*;
+import org.krohm.milleborne.util.*;
 import org.slf4j.Logger;
 
 ####
@@ -91,6 +91,22 @@ end
 # TODO : add rule to verify if currentAction have been validated or not
 # and jump to error / skip if required
 #
+
+rule "STEP_BEFORE_EXEC_2_ERROR"
+      salience 1
+      dialect "java"
+  when
+      context : InternalActionExecutionContext (currentStep == Steps.STEP_BEFORE_EXEC,
+            todoList : todoList,
+            currentAction : todoList.peek)
+            eval ( ((IInternalAction)currentAction).getValidationStatus()  == IInternalAction.STATUS_REJECTED)
+then
+       Logger logger = DrlUtil.getLogger();
+       logger.error("Action REJECTED: <" + currentAction +">");
+       context.setCurrentStep(Steps.STEP_ERROR);
+       modify ( context ) {}
+end
+
 
 rule "STEP_BEFORE_EXEC_2_STEP_EXEC"
       salience 0

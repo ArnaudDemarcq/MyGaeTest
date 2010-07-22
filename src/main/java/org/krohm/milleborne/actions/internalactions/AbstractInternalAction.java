@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package org.krohm.milleborne.actions.internalactions;
 
 import org.krohm.milleborne.actions.IInternalAction;
@@ -11,19 +10,15 @@ import org.krohm.milleborne.actions.IInternalAction;
  *
  * @author arnaud
  */
-public abstract class AbstractInternalAction implements IInternalAction
-{
-    private Boolean validated = null;
+public abstract class AbstractInternalAction implements IInternalAction {
 
-    public Boolean getValidated() {
-        return validated;
+    private int validationStatus = 0;
+
+    public int getValidationStatus() {
+        return validationStatus;
     }
 
-    public void setValidated(Boolean validated) {
-        this.validated = validated;
+    public void setValidationStatus(final int validationStatus) {
+        this.validationStatus = validationStatus;
     }
-    
-
-    
-
 }

@@ -59,5 +59,4 @@ public class InternalActionExecutionContext {
     public void setCurrentStep(int currentStep) {
         this.currentStep = currentStep;
     }
-
 }
