@@ -16,7 +16,7 @@ public interface IInternalAction extends IMilleBorneAction {
     public static int STATUS_VALIDATED = 1;
     public static int STATUS_REJECTED = -1;
 
-    void execute(MilleBorneGame currentGame) throws Exception;
+    void execute(MilleBorneGame currentGame);
 
     int getValidationStatus();
 

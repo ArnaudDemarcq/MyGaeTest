@@ -14,7 +14,7 @@ import org.krohm.milleborne.actions.IInternalAction;
  */
 public class ReplaceAction extends  AbstractInternalAction {
 
-    public void execute(MilleBorneGame currentGame) throws Exception {
+    public void execute(MilleBorneGame currentGame) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

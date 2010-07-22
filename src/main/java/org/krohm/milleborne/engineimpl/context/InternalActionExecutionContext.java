@@ -2,8 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.krohm.milleborne.engineimpl;
+package org.krohm.milleborne.engineimpl.context;
 
+import org.krohm.milleborne.engineimpl.*;
 import java.util.LinkedList;
 import java.util.Queue;
 import org.krohm.milleborne.actions.IInternalAction;

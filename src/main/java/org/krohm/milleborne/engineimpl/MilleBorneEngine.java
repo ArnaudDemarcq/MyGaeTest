@@ -4,6 +4,7 @@
  */
 package org.krohm.milleborne.engineimpl;
 
+import org.krohm.milleborne.engineimpl.context.InternalActionExecutionContext;
 import org.krohm.milleborne.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -67,7 +68,7 @@ public class MilleBorneEngine implements IMilleBorneEngine {
         executionData.setGameData(games.get(gameId));
         executionData.setUserAction(userAction);
         DroolsExecutionSolver solver = new DroolsExecutionSolver();
-        solver.performExecution(executionData);
-        //throw new UnsupportedOperationException("Not supported yet.");
+        //solver.performExecution(executionData);
+        solver.performExecution(userAction, games.get(gameId));
     }
 }

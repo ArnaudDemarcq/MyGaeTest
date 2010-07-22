@@ -1,10 +1,11 @@
-import org.krohm.milleborne.engineimpl.InternalActionExecutionContext;
-import org.krohm.milleborne.actions.useractions.PlayCardAction;
-import org.krohm.milleborne.actions.useractions.GameInitAction;
-import org.slf4j.Logger;
-import org.krohm.milleborne.util.DrlUtil;
+import org.krohm.milleborne.engineimpl.context.*;
 import org.krohm.milleborne.actions.internalactions.*;
-import org.krohm.milleborne.data.Steps;
+import org.krohm.milleborne.actions.returnactions.*;
+import org.krohm.milleborne.actions.useractions.*;
+import org.krohm.milleborne.actions.*;
+import org.krohm.milleborne.data.*;
+import org.krohm.milleborne.util.*;
+import org.slf4j.Logger;
 
 
 #
@@ -15,10 +16,11 @@ rule "Input Log"
       salience 65000
       dialect "java"
   when
-      context : InternalActionExecutionContext (userAction : userAction,currentStep == Steps.STEP_USER_ACTION)
+      context : ExecutionContext (currentStep == Steps.STEP_USER_ACTION)
+      logger : Logger ();
   then
-       Logger logger = DrlUtil.getLogger();
-       logger.error("Hop !");
+     #  Logger logger = DrlUtil.getLogger();
+       logger.error("Hop from inserted logger!");
 end
 
 
@@ -26,7 +28,8 @@ rule "PlayCardAction"
       salience 15
       dialect "java"
   when
-      context : InternalActionExecutionContext (userAction : userAction,currentStep == Steps.STEP_USER_ACTION)
+      context : ExecutionContext (currentStep == Steps.STEP_USER_ACTION)
+      userAction : IUserAction ()
       eval(userAction instanceof PlayCardAction)
   then
       PlayCardAction typedAction = (PlayCardAction) userAction;
@@ -38,14 +41,17 @@ rule "GameInitAction"
       salience 15
       dialect "java"
   when
-      context : InternalActionExecutionContext (userAction : userAction,currentStep == Steps.STEP_USER_ACTION)
+      context : ExecutionContext (currentStep == Steps.STEP_USER_ACTION)
+      userAction : IUserAction ()
+      todoList : InternalActionQueue ()
       eval(userAction instanceof GameInitAction)
   then
       Logger logger = DrlUtil.getLogger();
       GameInitAction typedAction = (GameInitAction) userAction;
       ShuffleDeckAction shuffleAction = new ShuffleDeckAction();
-      context.getTodoList().offer(shuffleAction);
+      todoList.offer(shuffleAction);
       shuffleAction = new ShuffleDeckAction();
-      context.getTodoList().offer(shuffleAction);
-      logger.error("####");
+      todoList.offer(shuffleAction);
+      logger.error("####" + todoList.size());
+      
 end

@@ -1,5 +1,4 @@
-import org.krohm.milleborne.engineimpl.MilleBorneGame;
-import org.krohm.milleborne.engineimpl.context.*;
+import org.krohm.milleborne.engineimpl.context.InternalActionExecutionContext;
 import org.krohm.milleborne.actions.internalactions.*;
 import org.krohm.milleborne.actions.returnactions.*;
 import org.krohm.milleborne.actions.useractions.*;
@@ -17,10 +16,8 @@ rule "START_2_INIT"
       salience 0
       dialect "java"
   when
-      context : ExecutionContext (currentStep : currentStep == Steps.STEP_START)
-      logger : Logger()
+      context : InternalActionExecutionContext (currentStep : currentStep == Steps.STEP_START)
   then
-       logger.error("Entering Rules");
        context.setCurrentStep(Steps.STEP_INIT);
        modify ( context ) {}
 end
@@ -35,7 +32,7 @@ rule "INIT_2_STEP_USER_ACTION"
       salience 0
       dialect "java"
   when
-      context : ExecutionContext (currentStep == Steps.STEP_INIT)
+      context : InternalActionExecutionContext (currentStep == Steps.STEP_INIT)
   then
        context.setCurrentStep(Steps.STEP_USER_ACTION);
        modify ( context ) {}
@@ -55,23 +52,20 @@ rule "STEP_USER_ACTION_2_INTERNAL"
       salience 0
       dialect "java"
   when
-      context : ExecutionContext (currentStep == Steps.STEP_USER_ACTION)
-      todoList : InternalActionQueue ();
+      context : InternalActionExecutionContext (currentStep == Steps.STEP_USER_ACTION)
   then
        context.setCurrentStep(Steps.InternalSteps.INTERNAL_STEP_USER_ACTION);
-       modify ( todoList ) {}
        modify ( context ) {}
-
 end
 
 rule "STEP_USER_ACTION_2_STEP_ERROR"
       salience 1
       dialect "java"
   when
-      context : ExecutionContext (currentStep == Steps.InternalSteps.INTERNAL_STEP_USER_ACTION)
-      todoList : InternalActionQueue (size < 1);
-      logger : Logger();
-    then
+      context : InternalActionExecutionContext (currentStep == Steps.InternalSteps.INTERNAL_STEP_USER_ACTION, todoList : todoList)
+      eval (todoList.size() < 1)
+  then
+       Logger logger = DrlUtil.getLogger();
        context.setReturnAction(new InvalidAction());
        context.setCurrentStep(Steps.STEP_ERROR);
        modify ( context ) {}
@@ -81,12 +75,9 @@ rule "STEP_USER_ACTION_2_STEP_BEFORE_EXEC"
       salience 0
       dialect "java"
   when
-      context : ExecutionContext (currentStep == Steps.InternalSteps.INTERNAL_STEP_USER_ACTION)
-      todoList : InternalActionQueue (currentAction  : peek)
-      logger : Logger();
-then
+      context : InternalActionExecutionContext (currentStep == Steps.InternalSteps.INTERNAL_STEP_USER_ACTION)
+  then
        context.setCurrentStep(Steps.STEP_BEFORE_EXEC);
-       logger.error("@@@@@@" + currentAction);
        modify ( context ) {}
 end
 
@@ -96,18 +87,21 @@ end
 #
 ####
 
+#
+# TODO : add rule to verify if currentAction have been validated or not
+# and jump to error / skip if required
+#
 
 rule "STEP_BEFORE_EXEC_2_ERROR"
       salience 1
       dialect "java"
   when
-      context : ExecutionContext (currentStep == Steps.STEP_BEFORE_EXEC)
-      todoList : InternalActionQueue (currentAction  : peek != null, status : peek.validationStatus )
-      logger : Logger()
-     # eval ( ((IInternalAction) currentAction).getValidationStatus()  == IInternalAction.STATUS_REJECTED)
-      eval ((Integer) status  == IInternalAction.STATUS_REJECTED)
+      context : InternalActionExecutionContext (currentStep == Steps.STEP_BEFORE_EXEC,
+            todoList : todoList,
+            currentAction : todoList.peek)
+            eval ( ((IInternalAction)currentAction).getValidationStatus()  == IInternalAction.STATUS_REJECTED)
 then
-    #   Logger logger = DrlUtil.getLogger();
+       Logger logger = DrlUtil.getLogger();
        logger.error("Action REJECTED: <" + currentAction +">");
        context.setCurrentStep(Steps.STEP_ERROR);
        modify ( context ) {}
@@ -118,7 +112,7 @@ rule "STEP_BEFORE_EXEC_2_STEP_EXEC"
       salience 0
       dialect "java"
   when
-      context : ExecutionContext (currentStep == Steps.STEP_BEFORE_EXEC)
+      context : InternalActionExecutionContext (currentStep == Steps.STEP_BEFORE_EXEC)
   then
        context.setCurrentStep(Steps.STEP_EXEC);
        modify ( context ) {}
@@ -135,14 +129,12 @@ rule "STEP_EXEC_2_INTERNAL"
       salience 0
       dialect "java"
   when
-      context : ExecutionContext (currentStep == Steps.STEP_EXEC)
-      todoList : InternalActionQueue ()
-      gameData : MilleBorneGame()
+      context : InternalActionExecutionContext (currentStep == Steps.STEP_EXEC)
   then
-       IInternalAction currentAction = todoList.peek();
+       IInternalAction currentAction = context.getTodoList().peek();
        Logger logger = DrlUtil.getLogger();
        logger.error("Executing Action : <" + currentAction +">");
-       currentAction.execute(gameData);
+       currentAction.execute(context.getGameData());
        context.setCurrentStep(Steps.InternalSteps.INTERNAL_STEP_EXEC);
        modify ( context ) {}
 end
@@ -152,7 +144,7 @@ rule "STEP_EXEC_2_STEP_AFTER_EXEC"
       salience 0
       dialect "java"
   when
-      context : ExecutionContext (currentStep == Steps.InternalSteps.INTERNAL_STEP_EXEC)
+      context : InternalActionExecutionContext (currentStep == Steps.InternalSteps.INTERNAL_STEP_EXEC)
   then
        context.setCurrentStep(Steps.STEP_AFTER_EXEC);
        modify ( context ) {}
@@ -168,10 +160,9 @@ rule "AFTER_EXEC_2_INTERNAL"
       salience 0
       dialect "java"
   when
-       context : ExecutionContext (currentStep == Steps.STEP_AFTER_EXEC)
-      todoList : InternalActionQueue ()
+      context : InternalActionExecutionContext (currentStep == Steps.STEP_AFTER_EXEC)
   then
-       IInternalAction currentAction = todoList.poll();
+       IInternalAction currentAction = context.getTodoList().poll();
        Logger logger = DrlUtil.getLogger();
        logger.error("Removing Action : <" + currentAction +">");
        context.setCurrentStep(Steps.InternalSteps.INTERNAL_STEP_AFTER_EXEC);
@@ -182,8 +173,7 @@ rule "STEP_EXEC_2_STEP_BEFORE_EXEC_LOOP"
       salience 1
       dialect "java"
   when
-      context : ExecutionContext (currentStep == Steps.InternalSteps.INTERNAL_STEP_AFTER_EXEC)
-      todoList : InternalActionQueue ()
+      context : InternalActionExecutionContext (currentStep == Steps.InternalSteps.INTERNAL_STEP_AFTER_EXEC, todoList : todoList)
       eval (todoList.size() > 0)
   then
        context.setCurrentStep(Steps.STEP_BEFORE_EXEC);
@@ -194,7 +184,7 @@ rule "STEP_AFTER_EXEC_2_STEP_END"
       salience 0
       dialect "java"
   when
-      context : ExecutionContext (currentStep == Steps.InternalSteps.INTERNAL_STEP_AFTER_EXEC)
+      context : InternalActionExecutionContext (currentStep == Steps.InternalSteps.INTERNAL_STEP_AFTER_EXEC)
   then
        context.setCurrentStep(Steps.STEP_END);
        modify ( context ) {}
@@ -219,7 +209,7 @@ rule "UNKNOWN_ERROR"
       salience 0
       dialect "java"
   when
-      context : ExecutionContext (currentStep == Steps.STEP_ERROR, returnAction : returnAction)
+      context : InternalActionExecutionContext (currentStep == Steps.STEP_ERROR, returnAction : returnAction)
       eval (! ( returnAction instanceof ErrorReturnAction))
   then
        context.setReturnAction(new UnknownErrorAction());

@@ -12,7 +12,7 @@ import org.krohm.milleborne.engineimpl.MilleBorneGame;
  */
 public class MoveCard extends  AbstractInternalAction {
 
-    public void execute(MilleBorneGame currentGame) throws Exception {
+    public void execute(MilleBorneGame currentGame)  {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }
