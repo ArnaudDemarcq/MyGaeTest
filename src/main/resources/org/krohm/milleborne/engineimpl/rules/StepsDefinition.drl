@@ -142,7 +142,7 @@ rule "STEP_EXEC_2_INTERNAL"
        IInternalAction currentAction = todoList.peek();
        Logger logger = DrlUtil.getLogger();
        logger.error("Executing Action : <" + currentAction +">");
-       currentAction.execute(gameData);
+       currentAction.execute(gameData,todoList);
        context.setCurrentStep(Steps.InternalSteps.INTERNAL_STEP_EXEC);
        modify ( context ) {}
 end
@@ -169,7 +169,7 @@ rule "AFTER_EXEC_2_INTERNAL"
       dialect "java"
   when
        context : ExecutionContext (currentStep == Steps.STEP_AFTER_EXEC)
-      todoList : InternalActionQueue ()
+       todoList : InternalActionQueue ()
   then
        IInternalAction currentAction = todoList.poll();
        Logger logger = DrlUtil.getLogger();

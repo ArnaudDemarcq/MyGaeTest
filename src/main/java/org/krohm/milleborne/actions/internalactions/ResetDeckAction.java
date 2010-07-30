@@ -7,6 +7,7 @@ package org.krohm.milleborne.actions.internalactions;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Deque;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.krohm.milleborne.MilleBorneCard;
@@ -21,29 +22,25 @@ import org.slf4j.LoggerFactory;
  *
  * @author arnaud
  */
-public class ShuffleDeckAction extends AbstractInternalAction {
+public class ResetDeckAction extends AbstractInternalAction {
 
-    private static final Logger logger = LoggerFactory.getLogger(ShuffleDeckAction.class);
+    private static final Logger logger = LoggerFactory.getLogger(ResetDeckAction.class);
 
     @Override
     public void execute(MilleBorneGame currentGame, Deque<IInternalAction> internalActionQueue) {
 
-        List<MilleBorneCard> deck = new ArrayList<MilleBorneCard>();
         Map<Long, MilleBorneCard> cards = currentGame.getGameItems();
+        Map<Long, MilleBorneCard> tmpCards = new HashMap<Long, MilleBorneCard>();
         for (Long key : cards.keySet()) {
-            MilleBorneCard currentCard = cards.get(key);
-            if (currentCard.getZoneId() == Zones.ZONE_DECK) {
-                deck.add(currentCard);
-            }
-        }
-        Collections.shuffle(deck);
-        for (MilleBorneCard currentCard : deck) {
-            Long previousKey = currentCard.getTimerId();
-            cards.remove(previousKey);
-            currentCard.setTimerId(UniqueId.getUniqueId());
-            cards.put(currentCard.getTimerId(), currentCard);
-        }
-        logger.error("Shuffle Done");
-    }
 
+            MilleBorneCard currentCard = cards.get(key);
+            currentCard.setZoneId(Zones.ZONE_DECK);
+            currentCard.setTimerId(UniqueId.getUniqueId());
+
+            tmpCards.put(currentCard.getTimerId(), currentCard);
+        }
+        cards.clear();
+        cards.putAll(tmpCards);
+        logger.error("Reset Done");
+    }
 }

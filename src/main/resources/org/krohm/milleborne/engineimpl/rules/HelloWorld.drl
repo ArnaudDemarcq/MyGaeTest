@@ -1,3 +1,4 @@
+import org.krohm.milleborne.engineimpl.MilleBorneGame;
 import org.krohm.milleborne.engineimpl.context.*;
 import org.krohm.milleborne.actions.internalactions.*;
 import org.krohm.milleborne.actions.returnactions.*;
@@ -45,13 +46,23 @@ rule "GameInitAction"
       userAction : IUserAction ()
       todoList : InternalActionQueue ()
       eval(userAction instanceof GameInitAction)
+      gameData : MilleBorneGame()
   then
       Logger logger = DrlUtil.getLogger();
       GameInitAction typedAction = (GameInitAction) userAction;
+# Reset, Shuffle.
+      ResetDeckAction resetAction = new ResetDeckAction();
+      todoList.offer(resetAction);
       ShuffleDeckAction shuffleAction = new ShuffleDeckAction();
       todoList.offer(shuffleAction);
-      shuffleAction = new ShuffleDeckAction();
-      todoList.offer(shuffleAction);
-      logger.error("####" + todoList.size());
+# And make every Player Draw 6 cards
+     for ( Long currentPlayerId : gameData.getGamePlayers().keySet())
+       {
+            DrawCardAction currentDrawCardAction = new DrawCardAction();
+            currentDrawCardAction.setPlayerId(currentPlayerId);
+            currentDrawCardAction.setCardNumber(6);
+            todoList.offer(currentDrawCardAction);
+       }
+      
       
 end

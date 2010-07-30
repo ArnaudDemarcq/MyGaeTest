@@ -12,8 +12,6 @@ import org.drools.builder.KnowledgeBuilder;
 import org.drools.builder.KnowledgeBuilderFactory;
 import org.drools.builder.ResourceType;
 import org.drools.definition.KnowledgePackage;
-import org.drools.event.rule.DebugAgendaEventListener;
-import org.drools.event.rule.DebugWorkingMemoryEventListener;
 import org.drools.io.ResourceFactory;
 import org.drools.runtime.StatefulKnowledgeSession;
 import org.krohm.milleborne.actions.IUserAction;
@@ -90,6 +88,7 @@ public class DroolsExecutionSolver {
         long endDate = new Date().getTime();
         logger.error("FINAL STEP IS : <" + sessionContext.getCurrentStep() + ">");
         logger.error("RESULTING RETURN ACTION : <" + sessionContext.getReturnAction() + ">");
-        logger.error("Rules Execution took : <" + (endDate - startDate) + ">");
+        logger.error("Rules Execution took : <" + (endDate - startDate) + "> ms");
+
     }
 }

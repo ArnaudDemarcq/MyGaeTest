@@ -5,8 +5,9 @@
 
 package org.krohm.milleborne.actions.internalactions;
 
-import org.krohm.milleborne.engineimpl.MilleBorneGame;
+import java.util.Deque;
 import org.krohm.milleborne.actions.IInternalAction;
+import org.krohm.milleborne.engineimpl.MilleBorneGame;
 
 /**
  *
@@ -14,7 +15,7 @@ import org.krohm.milleborne.actions.IInternalAction;
  */
 public class ReplaceAction extends  AbstractInternalAction {
 
-    public void execute(MilleBorneGame currentGame) {
+    public void execute(MilleBorneGame currentGame, Deque<IInternalAction> internalActionQueue) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
