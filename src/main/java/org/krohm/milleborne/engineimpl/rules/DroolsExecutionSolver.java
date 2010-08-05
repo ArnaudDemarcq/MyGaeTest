@@ -14,6 +14,7 @@ import org.drools.builder.ResourceType;
 import org.drools.definition.KnowledgePackage;
 import org.drools.io.ResourceFactory;
 import org.drools.runtime.StatefulKnowledgeSession;
+import org.krohm.milleborne.actions.IReturnAction;
 import org.krohm.milleborne.actions.IUserAction;
 import org.krohm.milleborne.engineimpl.MilleBorneGame;
 import org.krohm.milleborne.engineimpl.context.ExecutionContext;
@@ -51,7 +52,7 @@ public class DroolsExecutionSolver {
 
     }
 
-    public void performExecution(InternalActionExecutionContext executionData) {
+    public IReturnAction performExecution(InternalActionExecutionContext executionData) {
         logger.error("Executing :<" + executionData.toString() + ">");
 
         // sets up ksession
@@ -65,12 +66,14 @@ public class DroolsExecutionSolver {
         long startDate = new Date().getTime();
         ksession.fireAllRules();
         long endDate = new Date().getTime();
+        IReturnAction returnAction = executionData.getReturnAction();
         logger.error("FINAL STEP IS : <" + executionData.getCurrentStep() + ">");
-        logger.error("RESULTING RETURN ACTION : <" + executionData.getReturnAction() + ">");
+        logger.error("RESULTING RETURN ACTION : <" + returnAction + ">");
         logger.error("Rules Execution took : <" + (endDate - startDate) + ">");
+        return returnAction;
     }
 
-    public void performExecution(IUserAction userAction, MilleBorneGame currentGame) {
+    public IReturnAction performExecution(IUserAction userAction, MilleBorneGame currentGame) {
 
         // sets up ksession
         final StatefulKnowledgeSession ksession = kbase.newStatefulKnowledgeSession();
@@ -86,9 +89,10 @@ public class DroolsExecutionSolver {
         long startDate = new Date().getTime();
         ksession.fireAllRules();
         long endDate = new Date().getTime();
+        IReturnAction returnAction = sessionContext.getReturnAction();
         logger.error("FINAL STEP IS : <" + sessionContext.getCurrentStep() + ">");
-        logger.error("RESULTING RETURN ACTION : <" + sessionContext.getReturnAction() + ">");
+        logger.error("RESULTING RETURN ACTION : <" + returnAction + ">");
         logger.error("Rules Execution took : <" + (endDate - startDate) + "> ms");
-
+        return returnAction;
     }
 }

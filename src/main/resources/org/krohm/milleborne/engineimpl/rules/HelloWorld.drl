@@ -1,3 +1,5 @@
+package org.krohm.milleborne.engineimpl.rules
+
 import org.krohm.milleborne.engineimpl.MilleBorneGame;
 import org.krohm.milleborne.engineimpl.context.*;
 import org.krohm.milleborne.actions.internalactions.*;
@@ -7,6 +9,7 @@ import org.krohm.milleborne.actions.*;
 import org.krohm.milleborne.data.*;
 import org.krohm.milleborne.util.*;
 import org.slf4j.Logger;
+
 
 
 #
@@ -22,6 +25,11 @@ rule "Input Log"
   then
      #  Logger logger = DrlUtil.getLogger();
        logger.error("Hop from inserted logger!");
+       Class tmpClass = new Object(){}.getClass();
+       logger.error("CurrentClass => " + tmpClass);
+       Logger logger2= DrlUtil.getLogger(tmpClass);
+       logger.error("CurrentClass => " + tmpClass.getDeclaringClass());
+       logger2.error("Dow !");
 end
 
 
@@ -38,7 +46,8 @@ rule "PlayCardAction"
       System.out.println( "First Nimp Ever !" + typedAction.toString());
 end
 
-rule "GameInitAction"
+
+rule "GameInitActionOLD"
       salience 15
       dialect "java"
   when
@@ -47,6 +56,7 @@ rule "GameInitAction"
       todoList : InternalActionQueue ()
       eval(userAction instanceof GameInitAction)
       gameData : MilleBorneGame()
+      eval(userAction instanceof PlayCardAction ) # should be false => disables this rule
   then
       Logger logger = DrlUtil.getLogger();
       GameInitAction typedAction = (GameInitAction) userAction;
@@ -65,4 +75,16 @@ rule "GameInitAction"
        }
       
       
+end
+
+rule "GameInitActionNew"
+      salience 15
+      dialect "java"
+  when
+      context : ExecutionContext (currentStep == Steps.STEP_USER_ACTION)
+      userAction : GameInitAction ()
+      todoList : InternalActionQueue ()
+      gameData : MilleBorneGame()
+  then
+      todoList.offer(new IntenalInitAction());
 end

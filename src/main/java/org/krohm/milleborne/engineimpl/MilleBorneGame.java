@@ -15,7 +15,8 @@ import java.util.Map;
 public class MilleBorneGame extends MilleBorneObject {
 
     private long activePlayer;
-    private long currentPhase;
+    private int currentPhase;
+    private long turnOwner;
     private final Map<Long, MilleBorneCard> gameItems = new LinkedHashMap<Long, MilleBorneCard>();
     private final Map<Long, MilleBornePlayer> gamePlayers = new LinkedHashMap<Long, MilleBornePlayer>();
 
@@ -35,11 +36,19 @@ public class MilleBorneGame extends MilleBorneObject {
         this.activePlayer = activePlayer;
     }
 
-    public long getCurrentPhase() {
+    public long getTurnOwner() {
+        return turnOwner;
+    }
+
+    public void setTurnOwner(long turnOwner) {
+        this.turnOwner = turnOwner;
+    }
+
+    public int getCurrentPhase() {
         return currentPhase;
     }
 
-    public void setCurrentPhase(long currentPhase) {
+    public void setCurrentPhase(int currentPhase) {
         this.currentPhase = currentPhase;
     }
 }

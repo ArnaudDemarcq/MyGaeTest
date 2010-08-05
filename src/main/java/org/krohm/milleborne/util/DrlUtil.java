@@ -17,5 +17,10 @@ public class DrlUtil {
 
     public static final Logger getLogger() {
         return logger;
+
+    }
+
+    public static final Logger getLogger(Class targetClass) {
+        return LoggerFactory.getLogger(targetClass);
     }
 }

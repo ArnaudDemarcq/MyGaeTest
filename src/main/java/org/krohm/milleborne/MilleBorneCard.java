@@ -4,24 +4,21 @@
  */
 package org.krohm.milleborne;
 
-import org.krohm.milleborne.util.UniqueId;
-
 /**
  *
  * @author arnaud
  */
-public class MilleBorneCard extends MilleBorneObject{
+public class MilleBorneCard extends MilleBorneObject {
 
     /**
      * Card Information
      */
     private int type;
-        private int subType;
+    private int subType;
     private int dist;
     private String name;
     private long controlerId;
     private long zoneId;
-
 
     /**
      * And Corresponding getters /setters
@@ -51,7 +48,6 @@ public class MilleBorneCard extends MilleBorneObject{
         this.type = type;
     }
 
-
     public long getControlerId() {
         return controlerId;
     }
@@ -75,5 +71,4 @@ public class MilleBorneCard extends MilleBorneObject{
     public void setSubType(int subType) {
         this.subType = subType;
     }
-    
 }

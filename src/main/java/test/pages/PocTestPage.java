@@ -33,6 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.wicket.extensions.markup.html.tree.table.IRenderable;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.model.LoadableDetachableModel;
 import org.krohm.milleborne.actions.useractions.GameInitAction;
 import test.Pannels.CardActionPanel;
 
@@ -45,12 +46,35 @@ public class PocTestPage extends PocMainPage {
     private static final IMilleBorneEngine testMilleBorneEngine = new MilleBorneEngine();
     private static final long gameId = testMilleBorneEngine.newGame();
     private static final Logger logger = LoggerFactory.getLogger(PocTestPage.class);
+    private MilleBorneTreeModelModel modelModel = new MilleBorneTreeModelModel();
 
     public PocTestPage(PageParameters parameters) {
+
         super(parameters);
+        modelModel.setGameId(gameId);
+
 
         add(new Label("message", "Poc Test Page[" +
                 testMilleBorneEngine.getGameList().size() + "]" + gameId));
+
+        // activePlayer
+        String activePlayerString;
+        if (testMilleBorneEngine.getActivePlayer(gameId) == null) {
+            activePlayerString = "None";
+        } else {
+            activePlayerString = testMilleBorneEngine.getActivePlayer(gameId).getName();
+        }
+
+        String turnOwnerString;
+        if (testMilleBorneEngine.getTurnOwnerPlayer(gameId) == null) {
+            turnOwnerString = "None";
+        } else {
+            turnOwnerString = testMilleBorneEngine.getTurnOwnerPlayer(gameId).getName();
+        }
+
+        add(new Label("ActivePlayer", activePlayerString));
+        add(new Label("TurnOwner", "" + turnOwnerString));
+        add(new Label("CurrentPhase", "" + testMilleBorneEngine.getPhase(gameId)));
 
         Form currentForm = new Form("actionForm") {
 
@@ -81,8 +105,8 @@ public class PocTestPage extends PocMainPage {
             "userObject.timerId")};
 
 
-        //   TreeTable testTreeTable = new TreeTable("testTreeTable", createTreeModel(), columns);
         TreeTable testTreeTable = new TreeTable("testTreeTable", getMilleBorneTreeModel(gameId), columns);
+        //TreeTable testTreeTable = new TreeTable("testTreeTable", modelModel, columns);
 
 
         testTreeTable.getTreeState().setAllowSelectMultiple(false);
@@ -94,6 +118,7 @@ public class PocTestPage extends PocMainPage {
         });
         add(testTreeTable);
         testTreeTable.getTreeState().collapseAll();
+
     }
 
     private TreeModel getMilleBorneTreeModel(long gameId) {
@@ -177,6 +202,64 @@ public class PocTestPage extends PocMainPage {
             } else {
                 return super.newCell(node, level);
             }
+        }
+    }
+
+    private class MilleBorneTreeModelModel extends LoadableDetachableModel<TreeModel> {
+
+        private long gameId;
+
+        @Override
+        protected TreeModel load() {
+            return getMilleBorneTreeModel(getGameId());
+        }
+
+        public long getGameId() {
+            return gameId;
+        }
+
+        public void setGameId(long gameId) {
+            this.gameId = gameId;
+        }
+    }
+
+    private class MilleBorneGameClient {
+
+        private MilleBornePlayer activePlayer;
+        private MilleBornePlayer turnOwner;
+        private int currentPhase;
+        private long gameId;
+
+        public MilleBornePlayer getActivePlayer() {
+            return activePlayer;
+        }
+
+        public void setActivePlayer(MilleBornePlayer activePlayer) {
+            this.activePlayer = activePlayer;
+        }
+
+        public int getCurrentPhase() {
+            return currentPhase;
+        }
+
+        public void setCurrentPhase(int currentPhase) {
+            this.currentPhase = currentPhase;
+        }
+
+        public MilleBornePlayer getTurnOwner() {
+            return turnOwner;
+        }
+
+        public void setTurnOwner(MilleBornePlayer turnOwner) {
+            this.turnOwner = turnOwner;
+        }
+
+        public long getGameId() {
+            return gameId;
+        }
+
+        public void setGameId(long gameId) {
+            this.gameId = gameId;
         }
     }
 }
